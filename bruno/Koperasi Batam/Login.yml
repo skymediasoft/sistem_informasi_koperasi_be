@@ -1,0 +1,67 @@
+info:
+  name: Login
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: localhost:3000/auth/login
+  body:
+    type: json
+    data: |-
+      {
+        "username": "test-4",
+        "password": "password"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Login Response
+    request:
+      url: localhost:3000/auth/login
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "username": "test-4",
+            "password": "password"
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: x-powered-by
+          value: Express
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: content-length
+          value: "572"
+        - name: etag
+          value: W/"23c-HtwWKwgoEVubw5Lb8Md1kr9e35c"
+        - name: date
+          value: Sat, 29 Aug 2026 05:40:46 GMT
+        - name: connection
+          value: keep-alive
+        - name: keep-alive
+          value: timeout=5
+      body:
+        type: json
+        data: |-
+          {
+            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTQiLCJ1c2VybmFtZSI6InRlc3QtNCIsImlhdCI6MTc4Nzk4MjA0NiwiZXhwIjoxNzg3OTgyOTQ2fQ.MT796LgCZzkOyRfo1WDOcZKOrQWH2Z2LAXqN3oVeSWQ",
+            "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTQiLCJ1c2VybmFtZSI6InRlc3QtNCIsImp0aSI6ImQ0NzRmYWM3LWE2OWYtNGY3MC1hYzU1LTMwMjlkYzMwN2JlMiIsImlhdCI6MTc4Nzk4MjA0NiwiZXhwIjoxNzg4NTg2ODQ2fQ.JFtaXwaScAq9ZyiC8qNuWIXAgAhvWT_70OWd5bJZP9w",
+            "user": {
+              "UserLogin": "test-4",
+              "UserName": "arka test",
+              "UserEmail": "arka1@email.com",
+              "GroupID": 2,
+              "GroupName": "Admin Koperasi"
+            }
+          }

@@ -1,0 +1,70 @@
+info:
+  name: Register
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: localhost:3000/auth/register
+  body:
+    type: json
+    data: |-
+      {
+        "username": "test-5",
+        "name": "arka test",
+        "password": "password",
+        "email": "arka1@email.com",
+        "groupId": 2
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Register Response
+    request:
+      url: localhost:3000/auth/register
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "username": "test-5",
+            "name": "arka test",
+            "password": "password",
+            "email": "arka1@email.com",
+            "groupId": 2
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: x-powered-by
+          value: Express
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: content-length
+          value: "496"
+        - name: etag
+          value: W/"1f0-lxIIdvEVWU2+5r70ksZCaB80M0E"
+        - name: date
+          value: Sat, 29 Aug 2026 05:40:59 GMT
+        - name: connection
+          value: keep-alive
+        - name: keep-alive
+          value: timeout=5
+      body:
+        type: json
+        data: |-
+          {
+            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTUiLCJ1c2VybmFtZSI6InRlc3QtNSIsImlhdCI6MTc4Nzk4MjA1OSwiZXhwIjoxNzg3OTgyOTU5fQ.T7nWRV9WxrrOLkqVKqVE4tTpA7lcftexzlcWNS8g3mk",
+            "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTUiLCJ1c2VybmFtZSI6InRlc3QtNSIsImp0aSI6IjJiYTk3MmU5LTE2NjYtNGFlNS04YTlkLTFiODk0ZWRmYjU1MyIsImlhdCI6MTc4Nzk4MjA1OSwiZXhwIjoxNzg4NTg2ODU5fQ.jFWDad5gMyrhksacYbIJYdfm8kuvaKmPbvyd5poo_xA",
+            "user": {
+              "username": "test-5",
+              "Name": "arka test"
+            }
+          }
