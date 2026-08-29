@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,6 +10,7 @@ import { JwtPayloadDto } from './dto/jwt-payload.dto';
 import { User } from './entities/auth.entity';
 import { randomUUID } from 'crypto';
 import { encryptPassword } from './utils/encryption.util';
+import { mapAuthorizationToTree } from './utils/menu-parser.util';
 
 @Injectable()
 export class AuthService {
@@ -20,8 +21,13 @@ export class AuthService {
     private readonly config: ConfigService,
   ) { }
 
-  private async generateTokens(username: string) {
-    const payload = { sub: username, username };
+  private async generateTokens(jwtPayloadDto: JwtPayloadDto) {
+    const payload = {
+      sub: jwtPayloadDto.userlogin,
+      name: jwtPayloadDto.username,
+      email: jwtPayloadDto.email,
+      groupId: jwtPayloadDto.groupId,
+    };
 
     const accessToken = await this.jwtService.signAsync(payload);
 
@@ -35,36 +41,57 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto) {
-    const { username, password, name, email, groupId } = registerDto;
-    const existing = await this.userRepository.findOne({ where: { userLogin: username } });
+    const userlogin = registerDto.userlogin;
+    const username = registerDto.username;
+    const { password, email, groupId } = registerDto;
+
+    if (!userlogin) {
+      throw new BadRequestException('userlogin is required');
+    }
+    if (!password) {
+      throw new BadRequestException('password is required');
+    }
+
+    const existing = await this.userRepository.findOne({ where: { userLogin: userlogin } });
     if (existing) {
       throw new ConflictException('Username already exists');
     }
     const encryptedPassword = encryptPassword(password, this.config.get<string>('ENCRYPTION_KEY'));
     const newUser = this.userRepository.create({
-      userLogin: username,
-      userName: name,
+      userLogin: userlogin,
+      userName: username,
       userPassword: encryptedPassword,
       userEmail: email,
       groupId: groupId,
       postBy: 'SYSTEM',
     });
     const user = await this.userRepository.save(newUser);
-    const { accessToken, refreshToken } = await this.generateTokens(user.userLogin);
+    const { accessToken, refreshToken } = await this.generateTokens({
+      userlogin: user.userLogin,
+      username: user.userName,
+      email: user.userEmail || '',
+      groupId: user.groupId,
+    });
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
-      user: { username: user.userLogin, "Name": user.userName },
+      user: { username: user.userLogin, "name": user.userName },
     };
   }
 
   async login(loginDto: LoginDto) {
-    const { username, password } = loginDto;
+    const userlogin = loginDto.userlogin;
+    const { password } = loginDto;
+
+    if (!userlogin || !password) {
+      throw new BadRequestException('userlogin and password are required');
+    }
+
     const encryptedPassword = encryptPassword(password, this.config.get<string>('ENCRYPTION_KEY'));
 
     const [rows] = await this.userRepository.query(
-      `CALL GetUserLogin(?, ?)`,
-      [username, encryptedPassword]
+      `CALL sp_get_user_login(?, ?)`,
+      [userlogin, encryptedPassword]
     );
 
     const user = rows?.[0];
@@ -72,41 +99,74 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const { accessToken, refreshToken } = await this.generateTokens(user.UserLogin);
-
-    const { UserPassword, ...userPayload } = user;
+    const { accessToken, refreshToken } = await this.generateTokens({
+      userlogin: user.UserLogin,
+      username: user.UserName,
+      email: user.UserEmail,
+      groupId: user.GroupID,
+    });
 
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
-      user: userPayload,
+      success: 1,
     };
   }
 
-
   async refreshToken(refreshTokenDto: RefreshTokenDto) {
     const { refreshToken } = refreshTokenDto;
-    let payload: JwtPayloadDto;
+    if (!refreshToken) {
+      throw new BadRequestException('refreshToken is required');
+    }
+
+    let payload: { sub?: string; userlogin?: string; name?: string; username?: string; email?: string; groupId?: number };
     try {
-      payload = await this.jwtService.verifyAsync<JwtPayloadDto>(refreshToken, {
+      payload = await this.jwtService.verifyAsync(refreshToken, {
         secret: this.config.getOrThrow<string>('JWT_REFRESH_SECRET'),
       });
     } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
-    const user = await this.userRepository.findOne({ where: { userLogin: payload.username } });
+
+    const userLogin = payload.sub || payload.userlogin || payload.username;
+    if (!userLogin) {
+      throw new UnauthorizedException('Invalid refresh token payload');
+    }
+
+    const user = await this.userRepository.findOne({ where: { userLogin } });
     if (!user) {
       throw new UnauthorizedException('Invalid refresh token');
     }
-    const { accessToken, refreshToken: rotatedRefreshToken } = await this.generateTokens(user.userLogin);
+    const { accessToken, refreshToken: rotatedRefreshToken } = await this.generateTokens({
+      userlogin: user.userLogin,
+      username: user.userName,
+      email: user.userEmail || '',
+      groupId: user.groupId,
+    });
     return {
       access_token: accessToken,
       refresh_token: rotatedRefreshToken,
     };
   }
 
-  async logout(username: string) {
-    const user = await this.userRepository.findOne({ where: { userLogin: username } });
+  async logout(userLogin: string) {
+    if (!userLogin) {
+      throw new BadRequestException('userLogin is required');
+    }
+    const user = await this.userRepository.findOne({ where: { userLogin } });
     return { message: 'Logged out successfully' };
+  }
+
+  async getMenuAuthorization(groupId?: number) {
+    if (groupId === undefined || groupId === null) {
+      throw new BadRequestException('User group ID is missing from token');
+    }
+
+    const [rows] = await this.userRepository.query(
+      `CALL sp_get_group_authorization(?)`,
+      [groupId]
+    );
+
+    return mapAuthorizationToTree(rows || []);
   }
 }

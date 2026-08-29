@@ -10,8 +10,8 @@ http:
     type: json
     data: |-
       {
-        "username": "test-5",
-        "name": "arka test",
+        "userlogin": "test-6",
+        "username": "arka test 6",
         "password": "password",
         "email": "arka1@email.com",
         "groupId": 2
@@ -33,8 +33,8 @@ examples:
         type: json
         data: |-
           {
-            "username": "test-5",
-            "name": "arka test",
+            "userlogin": "test-6",
+            "username": "arka test 6",
             "password": "password",
             "email": "arka1@email.com",
             "groupId": 2
@@ -48,11 +48,11 @@ examples:
         - name: content-type
           value: application/json; charset=utf-8
         - name: content-length
-          value: "496"
+          value: "602"
         - name: etag
-          value: W/"1f0-lxIIdvEVWU2+5r70ksZCaB80M0E"
+          value: W/"25a-Rs73so1eMrI1Ks+bdCbm4oh3M+8"
         - name: date
-          value: Sat, 29 Aug 2026 05:40:59 GMT
+          value: Sat, 29 Aug 2026 07:19:17 GMT
         - name: connection
           value: keep-alive
         - name: keep-alive
@@ -61,10 +61,10 @@ examples:
         type: json
         data: |-
           {
-            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTUiLCJ1c2VybmFtZSI6InRlc3QtNSIsImlhdCI6MTc4Nzk4MjA1OSwiZXhwIjoxNzg3OTgyOTU5fQ.T7nWRV9WxrrOLkqVKqVE4tTpA7lcftexzlcWNS8g3mk",
-            "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTUiLCJ1c2VybmFtZSI6InRlc3QtNSIsImp0aSI6IjJiYTk3MmU5LTE2NjYtNGFlNS04YTlkLTFiODk0ZWRmYjU1MyIsImlhdCI6MTc4Nzk4MjA1OSwiZXhwIjoxNzg4NTg2ODU5fQ.jFWDad5gMyrhksacYbIJYdfm8kuvaKmPbvyd5poo_xA",
+            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTYiLCJuYW1lIjoiYXJrYSB0ZXN0IDYiLCJlbWFpbCI6ImFya2ExQGVtYWlsLmNvbSIsImdyb3VwSWQiOjIsImlhdCI6MTc4Nzk4Nzk1NywiZXhwIjoxNzg3OTg4ODU3fQ.Jct6hwci_bniOhlL4ZxcqCOxSFgxTwZDE48_-tzQtLQ",
+            "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTYiLCJuYW1lIjoiYXJrYSB0ZXN0IDYiLCJlbWFpbCI6ImFya2ExQGVtYWlsLmNvbSIsImdyb3VwSWQiOjIsImp0aSI6IjZkZTIzOWFmLWY3NmUtNDk0My04MGJjLTk3ODNkNDE3M2VhYyIsImlhdCI6MTc4Nzk4Nzk1NywiZXhwIjoxNzg4NTkyNzU3fQ.INpQxDZ1i9dJf4iVclV5hfO4n8YwzaUQRwQfYQmh7kc",
             "user": {
-              "username": "test-5",
-              "Name": "arka test"
+              "username": "test-6",
+              "Name": "arka test 6"
             }
           }

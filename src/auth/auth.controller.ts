@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -8,8 +8,9 @@ import { JwtPayloadDto } from './dto/jwt-payload.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
@@ -28,6 +29,12 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   async logout(@Request() req: { user: JwtPayloadDto }) {
-    return this.authService.logout(req.user.username);
+    return this.authService.logout(req.user.userlogin);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getProfile(@Request() req: { user: JwtPayloadDto }) {
+    return { user: req.user, menus: await this.authService.getMenuAuthorization(req.user.groupId) };
   }
 }

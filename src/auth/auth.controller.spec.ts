@@ -18,6 +18,7 @@ describe('AuthController', () => {
             login: vi.fn(),
             refreshToken: vi.fn(),
             logout: vi.fn(),
+            getMenuAuthorization: vi.fn(),
           },
         },
       ],

@@ -10,7 +10,7 @@ http:
     type: json
     data: |-
       {
-        "username": "test-4",
+        "userlogin": "test-6",
         "password": "password"
       }
   auth: inherit
@@ -30,7 +30,7 @@ examples:
         type: json
         data: |-
           {
-            "username": "test-4",
+            "userlogin": "test-4",
             "password": "password"
           }
     response:
@@ -42,11 +42,11 @@ examples:
         - name: content-type
           value: application/json; charset=utf-8
         - name: content-length
-          value: "572"
+          value: "526"
         - name: etag
-          value: W/"23c-HtwWKwgoEVubw5Lb8Md1kr9e35c"
+          value: W/"20e-rOlNem5LswuMJQ8CzI9wTg72S5g"
         - name: date
-          value: Sat, 29 Aug 2026 05:40:46 GMT
+          value: Sat, 29 Aug 2026 07:19:21 GMT
         - name: connection
           value: keep-alive
         - name: keep-alive
@@ -55,13 +55,7 @@ examples:
         type: json
         data: |-
           {
-            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTQiLCJ1c2VybmFtZSI6InRlc3QtNCIsImlhdCI6MTc4Nzk4MjA0NiwiZXhwIjoxNzg3OTgyOTQ2fQ.MT796LgCZzkOyRfo1WDOcZKOrQWH2Z2LAXqN3oVeSWQ",
-            "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTQiLCJ1c2VybmFtZSI6InRlc3QtNCIsImp0aSI6ImQ0NzRmYWM3LWE2OWYtNGY3MC1hYzU1LTMwMjlkYzMwN2JlMiIsImlhdCI6MTc4Nzk4MjA0NiwiZXhwIjoxNzg4NTg2ODQ2fQ.JFtaXwaScAq9ZyiC8qNuWIXAgAhvWT_70OWd5bJZP9w",
-            "user": {
-              "UserLogin": "test-4",
-              "UserName": "arka test",
-              "UserEmail": "arka1@email.com",
-              "GroupID": 2,
-              "GroupName": "Admin Koperasi"
-            }
+            "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTQiLCJuYW1lIjoiYXJrYSB0ZXN0IiwiZW1haWwiOiJhcmthMUBlbWFpbC5jb20iLCJpYXQiOjE3ODc5ODc5NjEsImV4cCI6MTc4Nzk4ODg2MX0.PLq0cEDaVxXUdhh8p4kn9k90nPoPpste_CNtZ5vPKP0",
+            "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTQiLCJuYW1lIjoiYXJrYSB0ZXN0IiwiZW1haWwiOiJhcmthMUBlbWFpbC5jb20iLCJqdGkiOiI2MzFiMWJlYS03OWQyLTRiYjgtODI0My0wNTVhY2IzNDg5YWUiLCJpYXQiOjE3ODc5ODc5NjEsImV4cCI6MTc4ODU5Mjc2MX0.JZxLTjA5_qzaI0EIYS4HUFNWteS40_rpOAkO3gp4ORg",
+            "success": 1
           }
