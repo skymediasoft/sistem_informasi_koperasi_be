@@ -8,13 +8,10 @@ import { JwtPayloadDto } from "../auth/dto/jwt-payload.dto";
 @Controller('department')
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
-
+  
   @Post('create')
-  create(@Body() createDepartmentDto: CreateDepartmentDto, @Req() req: Request & { user: JwtPayloadDto }) {
-    return this.departmentService.create({
-      ...createDepartmentDto,
-      departmentCreatedUser: req.user.userlogin,
-    });
+  create(@Body() createDepartmentDto: CreateDepartmentDto) {
+    return this.departmentService.create(createDepartmentDto);
   }
 
   @Get()
