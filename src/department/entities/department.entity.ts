@@ -3,8 +3,8 @@ import { Entity, Column, PrimaryColumn, CreateDateColumn, Index } from 'typeorm'
 @Entity('M_Department')
 @Index('M_Department_M_Users_idx', ['departmentCreatedUser'])
 export class Department {
-    @PrimaryColumn({ name: 'DepartmentId', type: 'int', generated: true })
-    departmentId: number;
+    @PrimaryColumn({ name: 'DepartmentId', type: 'varchar', nullable: false})
+    departmentId: string;
 
     @Column({ name: 'DepartmentName', type: 'varchar', length: 255, nullable: false })       
     departmentName: string;

@@ -1,0 +1,60 @@
+info:
+  name: "Update Department "
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: localhost:3000/department/1
+  body:
+    type: json
+    data: |-
+      {
+        "departmentName": "AIS 2"
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IkFkbWluIDEiLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjIsImlhdCI6MTc4ODU5ODQ0NywiZXhwIjoxNzg4NTk5MzQ3fQ.30ALY5B5zdEtnB9AhxGrE1qj9yR7RpVN0quffD-Iq2U
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: Update Department by Id
+    request:
+      url: localhost:3000/department/1
+      method: PATCH
+      body:
+        type: json
+        data: |-
+          {
+            "departmentName": "AIS 2"
+          }
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: x-powered-by
+          value: Express
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: content-length
+          value: "45"
+        - name: etag
+          value: W/"2d-TizJLgje/2pFLXo8bZ7UPGaM1iw"
+        - name: date
+          value: Sat, 05 Sep 2026 08:55:02 GMT
+        - name: connection
+          value: keep-alive
+        - name: keep-alive
+          value: timeout=5
+      body:
+        type: json
+        data: |-
+          {
+            "message": "Department updated successfully"
+          }

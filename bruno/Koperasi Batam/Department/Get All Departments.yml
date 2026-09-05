@@ -5,8 +5,10 @@ info:
 
 http:
   method: GET
-  url: localhost:3000/department/alldepartments
-  auth: inherit
+  url: localhost:3000/department
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IkFkbWluIDEiLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjIsImlhdCI6MTc4ODU5OTA3NCwiZXhwIjoxNzg4NTk5OTc0fQ.wO3npqV7qx6sXs96igzgWWdwResIf76YIZU71YZqRSg
 
 settings:
   encodeUrl: true
@@ -14,3 +16,50 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: false
+
+examples:
+  - name: Get All Departments
+    request:
+      url: localhost:3000/department
+      method: GET
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: x-powered-by
+          value: Express
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: content-length
+          value: "388"
+        - name: etag
+          value: W/"184-Yp0AOT22IkCNrFDuI2a6T16G1oI"
+        - name: date
+          value: Sat, 05 Sep 2026 08:51:27 GMT
+        - name: connection
+          value: keep-alive
+        - name: keep-alive
+          value: timeout=5
+      body:
+        type: json
+        data: |-
+          [
+            {
+              "departmentId": 1,
+              "departmentName": "AIS",
+              "departmentCreateDate": "2026-09-05T01:30:18.000Z",
+              "departmentCreatedUser": "superadmin"
+            },
+            {
+              "departmentId": 2,
+              "departmentName": "LSM",
+              "departmentCreateDate": "2026-09-05T01:32:35.000Z",
+              "departmentCreatedUser": "superadmin"
+            },
+            {
+              "departmentId": 3,
+              "departmentName": "BLT",
+              "departmentCreateDate": "2026-09-05T01:51:21.000Z",
+              "departmentCreatedUser": "superadmin"
+            }
+          ]

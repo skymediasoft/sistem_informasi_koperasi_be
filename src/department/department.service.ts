@@ -13,7 +13,7 @@ export class DepartmentService {
   ) {}
 
   async create(createDepartmentDto: CreateDepartmentDto,) {
-    const { departmentName, departmentCreatedUser } = createDepartmentDto;
+    const { departmentId, departmentName, departmentCreatedUser } = createDepartmentDto;
 
     const existingDepartment = await this.departmentRepository.findOne({ where: { departmentName } });
 
@@ -22,6 +22,7 @@ export class DepartmentService {
     }
 
     const newDepartment = await this.departmentRepository.create({
+      departmentId,
       departmentName,
       departmentCreatedUser,
     });
@@ -38,15 +39,33 @@ export class DepartmentService {
     return departments;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} department`;
+  findOne(id: string) {
+    return this.departmentRepository.findOne({ where: { departmentId: id } });
   }
 
-  update(id: number, updateDepartmentDto: UpdateDepartmentDto) {
-    return `This action updates a #${id} department`;
+  update(id: string, updateDepartmentDto: UpdateDepartmentDto) {
+    const { departmentName } = updateDepartmentDto;
+
+    const updatedDepartment = this.departmentRepository.update(id, { departmentName });
+
+    if (!updatedDepartment) {
+      throw new BadRequestException('Updated department failed');
+    }
+
+    return {
+      message: 'Department updated successfully',
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} department`;
+  remove(id: string) {
+    const deletedDepartment = this.departmentRepository.delete(id);
+
+    if (!deletedDepartment) {
+      throw new BadRequestException('Deleted department failed');
+    }
+
+    return {
+      message: 'Department deleted successfully',
+    }
   }
 }

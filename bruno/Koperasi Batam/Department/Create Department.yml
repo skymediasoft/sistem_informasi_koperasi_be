@@ -10,11 +10,12 @@ http:
     type: json
     data: |-
       {
-        "departmentName": "Facility"
+        "departmentId": "BLT",
+        "departmentName": "BLT Dept."
       }
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IkFkbWluIDEiLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjIsImlhdCI6MTc4ODU5NjIyMiwiZXhwIjoxNzg4NTk3MTIyfQ.0upYAwDrb-QP9hWJgEqSOcnqiFllgmzhUcvBwYwS4l8
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IkFkbWluIDEiLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjIsImlhdCI6MTc4ODU5OTA3NCwiZXhwIjoxNzg4NTk5OTc0fQ.wO3npqV7qx6sXs96igzgWWdwResIf76YIZU71YZqRSg
 
 settings:
   encodeUrl: true
@@ -22,3 +23,45 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: false
+
+examples:
+  - name: Create Department Response
+    request:
+      url: localhost:3000/department/create
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "departmentId": "BLT",
+            "departmentName": "BLT Dept."
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: x-powered-by
+          value: Express
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: content-length
+          value: "147"
+        - name: etag
+          value: W/"93-WxSFxwYFWLQ0/I2jcypIRNb4ndA"
+        - name: date
+          value: Sat, 05 Sep 2026 09:05:10 GMT
+        - name: connection
+          value: keep-alive
+        - name: keep-alive
+          value: timeout=5
+      body:
+        type: json
+        data: |-
+          {
+            "message": "Department created successfully",
+            "department": {
+              "departmentId": "BLT",
+              "departmentName": "BLT Dept.",
+              "departmentCreatedUser": "superadmin"
+            }
+          }

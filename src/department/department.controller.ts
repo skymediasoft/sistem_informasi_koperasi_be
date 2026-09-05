@@ -19,23 +19,27 @@ export class DepartmentController {
     });
   }
 
-  @Get('alldepartments')
+  @UseGuards(JwtAuthGuard)
+  @Get()
   findAll() {
     return this.departmentService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.departmentService.findOne(+id);
+    return this.departmentService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDepartmentDto: UpdateDepartmentDto) {
-    return this.departmentService.update(+id, updateDepartmentDto);
+    return this.departmentService.update(id, updateDepartmentDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.departmentService.remove(+id);
+    return this.departmentService.remove(id);
   }
 }
