@@ -10,10 +10,10 @@ http:
     type: json
     data: |-
       {
-        "userlogin": "test-6",
-        "username": "arka test 6",
+        "userlogin": "admin",
+        "username": "Admin 1",
         "password": "password",
-        "email": "arka1@email.com",
+        "email": "admin@admin.com",
         "groupId": 2
       }
   auth: inherit
@@ -23,6 +23,7 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 examples:
   - name: Register Response

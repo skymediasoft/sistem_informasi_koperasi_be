@@ -10,7 +10,6 @@ import { JwtPayloadDto } from './dto/jwt-payload.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @UseGuards(JwtAuthGuard)
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);

@@ -1,0 +1,23 @@
+info:
+  name: Ngrok Login
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: https://b96c-2404-c0-5010-00-167c-c555.ngrok-free.app/auth/login
+  body:
+    type: json
+    data: |-
+      {
+        "userlogin": "test-6",
+        "password": "password"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -9,8 +9,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtPayloadDto } from './dto/jwt-payload.dto';
 import { User } from './entities/auth.entity';
 import { randomUUID } from 'crypto';
-import { encryptPassword } from './utils/encryption.util';
 import { mapAuthorizationToTree } from './utils/menu-parser.util';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -54,13 +54,13 @@ export class AuthService {
 
     const existing = await this.userRepository.findOne({ where: { userLogin: userlogin } });
     if (existing) {
-      throw new ConflictException('Username already exists');
+      throw new ConflictException('UserLogin already exists');
     }
-    const encryptedPassword = encryptPassword(password, this.config.get<string>('ENCRYPTION_KEY'));
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = this.userRepository.create({
       userLogin: userlogin,
       userName: username,
-      userPassword: encryptedPassword,
+      userPassword: hashedPassword,
       userEmail: email,
       groupId: groupId,
       postBy: 'SYSTEM',
@@ -87,23 +87,21 @@ export class AuthService {
       throw new BadRequestException('userlogin and password are required');
     }
 
-    const encryptedPassword = encryptPassword(password, this.config.get<string>('ENCRYPTION_KEY'));
-
-    const [rows] = await this.userRepository.query(
-      `CALL sp_get_user_login(?, ?)`,
-      [userlogin, encryptedPassword]
-    );
-
-    const user = rows?.[0];
+    const user = await this.userRepository.findOne({ where: { userLogin: userlogin } });
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    const isPasswordValid = await bcrypt.compare(password, user.userPassword);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
     const { accessToken, refreshToken } = await this.generateTokens({
-      userlogin: user.UserLogin,
-      username: user.UserName,
-      email: user.UserEmail,
-      groupId: user.GroupID,
+      userlogin: user.userLogin,
+      username: user.userName,
+      email: user.userEmail || '',
+      groupId: user.groupId,
     });
 
     return {
