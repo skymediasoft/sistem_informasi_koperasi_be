@@ -12,8 +12,8 @@ export class DepartmentService {
     private readonly departmentRepository: Repository<Department>,
   ) {}
 
-  async create(createDepartmentDto: CreateDepartmentDto,) {
-    const { departmentId, departmentName, departmentCreatedUser } = createDepartmentDto;
+  async create(createDepartmentDto: CreateDepartmentDto) {
+    const { departmentId, departmentName, departmentCreatedUser: user } = createDepartmentDto;
 
     const existingDepartment = await this.departmentRepository.findOne({ where: { departmentName } });
 
@@ -21,10 +21,10 @@ export class DepartmentService {
       throw new ConflictException('Department name already exists');
     }
 
-    const newDepartment = await this.departmentRepository.create({
+    const newDepartment = this.departmentRepository.create({
       departmentId,
       departmentName,
-      departmentCreatedUser,
+      departmentCreatedUser: user,
     });
 
     await this.departmentRepository.save(newDepartment);
