@@ -1,18 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { DepartmentService } from './department.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtPayloadDto } from "../auth/dto/jwt-payload.dto";
 
 @Controller('department')
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
 
-  @Post()
-  create(@Body() createDepartmentDto: CreateDepartmentDto) {
-    return this.departmentService.create(createDepartmentDto);
+  @UseGuards(JwtAuthGuard)
+  @Post('create')
+  create(@Body() createDepartmentDto: CreateDepartmentDto, @Req() req: Request & { user: JwtPayloadDto }) {
+    return this.departmentService.create({
+      ...createDepartmentDto,
+      departmentCreatedUser: req.user.userlogin,
+    });
   }
 
-  @Get()
+  @Get('alldepartments')
   findAll() {
     return this.departmentService.findAll();
   }

@@ -1,0 +1,24 @@
+info:
+  name: Create Department
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: localhost:3000/department/create
+  body:
+    type: json
+    data: |-
+      {
+        "departmentName": "Facility"
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IkFkbWluIDEiLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjIsImlhdCI6MTc4ODU5NjIyMiwiZXhwIjoxNzg4NTk3MTIyfQ.0upYAwDrb-QP9hWJgEqSOcnqiFllgmzhUcvBwYwS4l8
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

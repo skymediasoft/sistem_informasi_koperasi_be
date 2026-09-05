@@ -10,7 +10,7 @@ http:
     type: json
     data: |-
       {
-        "userlogin": "test-6",
+        "userlogin": "superadmin",
         "password": "password"
       }
   auth: inherit
@@ -20,6 +20,7 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 examples:
   - name: Login Response

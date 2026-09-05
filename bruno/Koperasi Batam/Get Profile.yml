@@ -8,10 +8,11 @@ http:
   url: localhost:3000/auth/me
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0LTYiLCJuYW1lIjoiYXJrYSB0ZXN0IDYiLCJlbWFpbCI6ImFya2ExQGVtYWlsLmNvbSIsImdyb3VwSWQiOjIsImlhdCI6MTc4Nzk5MzM0NCwiZXhwIjoxNzg3OTk0MjQ0fQ.ZOIxCAD9iiP1GaDMAi-593rlXoa96rcHQUnQMGWr3dk
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IkFkbWluIDEiLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjIsImlhdCI6MTc4ODU5NjIyMiwiZXhwIjoxNzg4NTk3MTIyfQ.0upYAwDrb-QP9hWJgEqSOcnqiFllgmzhUcvBwYwS4l8
 
 settings:
   encodeUrl: true
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+  forwardAuthorizationHeader: true
