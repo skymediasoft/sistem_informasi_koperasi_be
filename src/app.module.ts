@@ -7,6 +7,7 @@ import { User } from './auth/entities/auth.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DepartmentModule } from './department/department.module';
 import { MenuModule } from './menu/menu.module';
+import { GroupModule } from './group/group.module';
 
 
 @Module({
@@ -30,6 +31,7 @@ import { MenuModule } from './menu/menu.module';
     }),
     DepartmentModule,
     MenuModule,
+    GroupModule,
   ],
   controllers: [AppController],
   providers: [AppService],
