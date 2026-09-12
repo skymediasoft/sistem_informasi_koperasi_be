@@ -1,0 +1,70 @@
+info:
+  name: Update Menu
+  type: http
+  seq: 5
+
+http:
+  method: PATCH
+  url: localhost:3000/menu/44
+  body:
+    type: json
+    data: |-
+      {
+        "menuName": "Cek 1.10",
+        "menuRoute": "/cek110",
+        "menuSort": 11
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IlN1cHJpaGF0aW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjEsImlhdCI6MTc4OTE5NTgxNiwiZXhwIjoxNzg5MTk2NzE2fQ.cKXq9G7m-0uxnpiOS8qSGgfnAhrSkgMz7UMiyOsU_pE
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: Update menu
+    request:
+      url: localhost:3000/menu/44
+      method: PATCH
+      body:
+        type: json
+        data: |-
+          {
+            "menuName": "Cek 1.10",
+            "menuRoute": "/cek110",
+            "menuSort": 11
+          }
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: x-powered-by
+          value: Express
+        - name: access-control-allow-origin
+          value: "*"
+        - name: access-control-allow-credentials
+          value: "true"
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: content-length
+          value: "42"
+        - name: etag
+          value: W/"2a-mp76xueJwuBg6SC3F/3HJjTMrec"
+        - name: date
+          value: Sat, 12 Sep 2026 06:54:59 GMT
+        - name: connection
+          value: keep-alive
+        - name: keep-alive
+          value: timeout=5
+      body:
+        type: json
+        data: |-
+          {
+            "generatedMaps": [],
+            "raw": [],
+            "affected": 1
+          }

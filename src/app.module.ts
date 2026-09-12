@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './auth/entities/auth.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DepartmentModule } from './department/department.module';
+import { MenuModule } from './menu/menu.module';
 
 
 @Module({
@@ -28,6 +29,7 @@ import { DepartmentModule } from './department/department.module';
       }),
     }),
     DepartmentModule,
+    MenuModule,
   ],
   controllers: [AppController],
   providers: [AppService],

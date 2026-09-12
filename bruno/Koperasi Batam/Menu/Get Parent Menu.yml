@@ -1,0 +1,76 @@
+info:
+  name: Get Parent Menu
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: localhost:3000/menu/child/1
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: Get Child with parent id
+    request:
+      url: localhost:3000/menu/child/1
+      method: GET
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: x-powered-by
+          value: Express
+        - name: access-control-allow-origin
+          value: "*"
+        - name: access-control-allow-credentials
+          value: "true"
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: content-length
+          value: "547"
+        - name: etag
+          value: W/"223-TIcVPzZJaLztVXw83yC7GlYdIzs"
+        - name: date
+          value: Sat, 12 Sep 2026 06:05:32 GMT
+        - name: connection
+          value: keep-alive
+        - name: keep-alive
+          value: timeout=5
+      body:
+        type: json
+        data: |-
+          [
+            {
+              "menuID": 7,
+              "menuName": "Setting Simpanan",
+              "menuParentID": "1",
+              "menuRoute": "/configuration/setting-simpanan",
+              "menuSort": 1,
+              "postBy": "Admin",
+              "postDate": "2026-09-12T00:24:01.000Z"
+            },
+            {
+              "menuID": 8,
+              "menuName": "Setting Pinjaman/Kredit",
+              "menuParentID": "1",
+              "menuRoute": "/configuration/setting-pinjaman-kredit",
+              "menuSort": 2,
+              "postBy": "Admin",
+              "postDate": "2026-08-29T00:13:11.000Z"
+            },
+            {
+              "menuID": 9,
+              "menuName": "Setting Jenis Jasa",
+              "menuParentID": "1",
+              "menuRoute": "/configuration/setting-jenis-jasa",
+              "menuSort": 3,
+              "postBy": "Admin",
+              "postDate": "2026-09-12T00:32:12.000Z"
+            }
+          ]

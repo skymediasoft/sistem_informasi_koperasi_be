@@ -1,0 +1,74 @@
+info:
+  name: Create Parent Menu
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: localhost:3000/menu/create
+  body:
+    type: json
+    data: |-
+      {
+        "menuName": "Cek 4",
+        "menuRoute": "/testing",
+        "menuSort": 9
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IlN1cHJpaGF0aW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjEsImlhdCI6MTc4OTE5NDgzNCwiZXhwIjoxNzg5MTk1NzM0fQ.UMfxQmXiMHO49xQECuOBgTcLU3frZRzYBKmqg8S0FHQ
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: Create Parent result
+    request:
+      url: localhost:3000/menu/create
+      method: POST
+      body:
+        type: json
+        data: |-
+          {
+            "menuName": "Cek 4",
+            "menuRoute": "/testing",
+            "menuSort": 9
+          }
+    response:
+      status: 201
+      statusText: Created
+      headers:
+        - name: x-powered-by
+          value: Express
+        - name: access-control-allow-origin
+          value: "*"
+        - name: access-control-allow-credentials
+          value: "true"
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: content-length
+          value: "147"
+        - name: etag
+          value: W/"93-P/x0ILAIEGiCVcX87py70bfyuOA"
+        - name: date
+          value: Sat, 12 Sep 2026 06:34:01 GMT
+        - name: connection
+          value: keep-alive
+        - name: keep-alive
+          value: timeout=5
+      body:
+        type: json
+        data: |-
+          {
+            "menuID": 50,
+            "menuName": "Cek 4",
+            "menuParentID": "0",
+            "menuRoute": "/testing",
+            "menuSort": 9,
+            "postBy": "superadmin",
+            "postDate": "2026-09-12T06:34:01.000Z"
+          }

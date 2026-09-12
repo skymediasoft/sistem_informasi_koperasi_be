@@ -1,0 +1,53 @@
+info:
+  name: Delete Menu
+  type: http
+  seq: 6
+
+http:
+  method: DELETE
+  url: localhost:3000/menu/43
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IlN1cHJpaGF0aW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjEsImlhdCI6MTc4OTE5NjQxNiwiZXhwIjoxNzg5MTk3MzE2fQ.Ge_uOVMLsl3sSxs9p-wnQU05mCNNHeb3rx3YtoT48Vg
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: Delete response
+    request:
+      url: localhost:3000/menu/43
+      method: DELETE
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: x-powered-by
+          value: Express
+        - name: access-control-allow-origin
+          value: "*"
+        - name: access-control-allow-credentials
+          value: "true"
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: content-length
+          value: "23"
+        - name: etag
+          value: W/"17-Q7u1V4Iuzj32ddr0oKe8WtoRu/M"
+        - name: date
+          value: Sat, 12 Sep 2026 07:01:25 GMT
+        - name: connection
+          value: keep-alive
+        - name: keep-alive
+          value: timeout=5
+      body:
+        type: json
+        data: |-
+          {
+            "raw": [],
+            "affected": 2
+          }
