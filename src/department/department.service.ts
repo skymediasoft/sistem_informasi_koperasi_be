@@ -23,8 +23,8 @@ export class DepartmentService {
 
     const newDepartment = this.departmentRepository.create({
       departmentId,
-      departmentName,
-      departmentCreatedUser: user,
+      departmentName, 
+      PostBy: user,
     });
 
     await this.departmentRepository.save(newDepartment);
