@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtPayloadDto } from './dto/jwt-payload.dto';
+import { UpdateDto } from './dto/update.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -40,5 +41,10 @@ export class AuthController {
   @Get('users')
   async getAllUsers() {
     return this.authService.getAllUsers();
+  }
+
+  @Patch('users/edit') 
+  async editUser(@Body() updateDto: UpdateDto) {
+    return this.authService.editUser(updateDto);
   }
 }

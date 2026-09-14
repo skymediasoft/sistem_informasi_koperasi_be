@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { UpdateDto } from './dto/update.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayloadDto } from './dto/jwt-payload.dto';
@@ -179,5 +180,34 @@ export class AuthService {
     );
 
     return mapAuthorizationToTree(rows || []);
+  }
+
+  async editUser(updateDto: UpdateDto) {
+    const {userlogin, userloginInput, username, password, email, groupId } = updateDto;
+
+    if (!userloginInput) {
+      throw new BadRequestException('userlogin is required');
+    }
+
+
+  const exist = userlogin !== userloginInput &&
+  await this.userRepository.exists({ where: { userLogin: userlogin } });    
+  if (exist) {
+      throw new ConflictException('UserLogin already exists');
+    }
+
+    const user = await this.userRepository.update({ userLogin: userlogin }, {
+      userLogin: userloginInput,
+      userName: username,
+      userPassword: password ? await bcrypt.hash(password, 10) : undefined,
+      userEmail: email,
+      groupId: groupId,
+    });
+
+    if (user.affected === 0) {
+      throw new BadRequestException('User not found or no changes made');
+    }
+
+    return { message: 'User updated successfully' };
   }
 }
