@@ -36,4 +36,9 @@ export class AuthController {
   async getProfile(@Request() req: { user: JwtPayloadDto }) {
     return { user: req.user, menus: await this.authService.getMenuAuthorization(req.user.groupId) };
   }
+
+  @Get('users')
+  async getAllUsers() {
+    return this.authService.getAllUsers();
+  }
 }

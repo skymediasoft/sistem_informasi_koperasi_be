@@ -40,6 +40,19 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
+  async getAllUsers() {
+    return await this.userRepository.find({
+      select: {
+        userLogin: true,
+        userName: true,
+        userEmail: true,
+        postBy: true,
+        postDate: true,
+        groupId: true,
+      }
+    }); 
+  }
+
   async register(registerDto: RegisterDto) {
     const userlogin = registerDto.userlogin;
     const username = registerDto.username;
