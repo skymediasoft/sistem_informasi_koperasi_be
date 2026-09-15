@@ -12,7 +12,7 @@ export class RegisterDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(6)
-  password: string;
+  password?: string = '123456';
 
   @IsNotEmpty()
   @IsString()

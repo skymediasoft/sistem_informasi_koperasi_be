@@ -6,6 +6,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { UpdateDto } from './dto/update.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayloadDto } from './dto/jwt-payload.dto';
 import { User } from './entities/auth.entity';
@@ -183,7 +184,7 @@ export class AuthService {
   }
 
   async editUser(updateDto: UpdateDto) {
-    const {userlogin, userloginInput, username, password, email, groupId } = updateDto;
+    const {userlogin, userloginInput, username, email, groupId } = updateDto;
 
     if (!userloginInput) {
       throw new BadRequestException('userlogin is required');
@@ -199,7 +200,6 @@ export class AuthService {
     const user = await this.userRepository.update({ userLogin: userlogin }, {
       userLogin: userloginInput,
       userName: username,
-      userPassword: password ? await bcrypt.hash(password, 10) : undefined,
       userEmail: email,
       groupId: groupId,
     });
@@ -209,5 +209,38 @@ export class AuthService {
     }
 
     return { message: 'User updated successfully' };
+  }
+
+  async deleteUser(userlogin: string) {
+    if (!userlogin) {
+      throw new BadRequestException('userlogin is required');
+    }
+
+    const user = await this.userRepository.delete({ userLogin: userlogin });
+
+    if (user.affected === 0) {
+      throw new BadRequestException('User not found');
+    }
+
+    return { message: 'User deleted successfully' };
+  }
+
+  async adminResetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { userlogin, newPassword } = resetPasswordDto;
+    
+    if (!userlogin || !newPassword) {
+      throw new BadRequestException('userlogin and newPassword are required');
+    }
+
+    const user = await this.userRepository.findOne({ where: { userLogin: userlogin } });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.userPassword = hashedPassword;
+    await this.userRepository.save(user);
+
+    return { message: 'Password reset successfully' };
   }
 }

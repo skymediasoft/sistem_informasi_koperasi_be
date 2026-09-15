@@ -51,9 +51,27 @@ export class GroupService {
   }
 
   async findGroupAuth(id: number) {
-    return this.groupAuthorizationRepository.find({
+    const menus = await this.menuRepository.find();
+    const GroupAuths= await this.groupAuthorizationRepository.find({
       where: { groupId: id },
     });
+    
+    const authMap = new Map<number, number>();
+    for (const auth of GroupAuths) {
+      authMap.set(auth.menuId, auth.access);
+    }
+
+    const result = menus.map((menu) => {
+      const access = authMap.get(menu.menuID);
+
+      return {
+        groupId: id,
+        menuId: menu.menuID,
+        access: access !== undefined ? access : 0,
+      };
+    });
+
+    return result;
   }
 
   async createGroupAuth(createGroupAuthDto: CreateGroupAuthDto[]) {
