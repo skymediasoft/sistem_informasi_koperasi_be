@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { Menu } from './entities/menu.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
@@ -16,7 +16,7 @@ export class MenuService {
     const isExist = await this.menuRepository.findOne({ where: { menuName: createMenuDto.menuName } });
 
     if (isExist) {
-      throw new Error('Menu already exists');
+      throw new ConflictException('Menu already exists');
     }
 
     const menu = this.menuRepository.create({
@@ -47,7 +47,7 @@ export class MenuService {
     });
 
     if (isExist) {
-      throw new Error('Cannot change menu name to one that already exists');
+      throw new ConflictException('Cannot change menu name to one that already exists');
     }
 
     return this.menuRepository.update(id, {
