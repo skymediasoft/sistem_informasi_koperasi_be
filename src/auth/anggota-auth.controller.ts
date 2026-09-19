@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Patch, UseGuards, Request, Delete, Param } from '@nestjs/common';  
+import { Controller, Post, Body, Get, Patch, UseGuards, Request, Delete, Param, HttpStatus, HttpCode } from '@nestjs/common';  
 import { AnggotaAuthService } from './anggota-auth.service';
 import { UpdateAnggotaDto } from './dto/update-anggota.dto';
 import { RegisterAnggotaDto } from './dto/register-anggota.dto';
@@ -28,6 +28,7 @@ export class AnggotaAuthController {
 
     @UseGuards(JwtAuthGuard)
     @Patch('update/:id')
+    @HttpCode(HttpStatus.OK)
     async updateAnggota(@Body() updateAnggotaDto: UpdateAnggotaDto, @Request() req: { user: JwtPayloadDto }, @Param('id') id: string) {
         return this.anggotaAuthService.updateAnggota(updateAnggotaDto, req.user.username, id);
     }

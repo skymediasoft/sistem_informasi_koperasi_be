@@ -29,6 +29,7 @@ export class AuthService {
       name: jwtPayloadDto.username,
       email: jwtPayloadDto.email,
       groupId: jwtPayloadDto.groupId,
+      groupName: jwtPayloadDto.groupName,
       noAnggota: jwtPayloadDto.noAnggota,
     };
 
@@ -95,21 +96,24 @@ export class AuthService {
       throw new BadRequestException('userlogin and password are required');
     }
 
-    const user = await this.userRepository.findOne({ where: { userLogin: userlogin } });
+    const [rows] = await this.userRepository.query('CALL sp_Get_Users_Login(?)', [userlogin]);
+    const user = rows[0];
+
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.userPassword);
+    const isPasswordValid = await bcrypt.compare(password, user.UserPassword);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     const { accessToken, refreshToken } = await this.generateTokens({
-      userlogin: user.userLogin,
-      username: user.userName,
-      email: user.userEmail || '',
-      groupId: user.groupId,
+      userlogin: user.UserLogin,
+      username: user.UserName,
+      email: user.UserEmail || '',
+      groupId: user.GroupID,
+      groupName: user.GroupName,
     });
 
     return {

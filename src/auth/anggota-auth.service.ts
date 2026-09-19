@@ -132,11 +132,20 @@ export class AnggotaAuthService extends AuthService {
 
     const message = out?.p_Message as string;
 
-    return { message };
+    return {
+      statusCode: 200,
+      message: 'Data successfully updated.',
+    }
   }
 
   async deleteAnggota(noAnggota: string) {
-    await this.anggotaRepository.delete({ NoAnggota: noAnggota });
+    try {
+      await this.anggotaRepository.delete({ NoAnggota: noAnggota });
+      return { message: `Anggota ${noAnggota} has been deleted.` };
+    }
+    catch (error) {
+      throw new BadRequestException('Failed to delete anggota. Error: ' + error);
+    }
   }
 }
 
