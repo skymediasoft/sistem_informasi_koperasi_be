@@ -1,0 +1,16 @@
+info:
+  name: Update & Apply
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: localhost:3000/setting-simpanan
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

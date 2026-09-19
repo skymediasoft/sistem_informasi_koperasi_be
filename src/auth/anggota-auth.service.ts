@@ -23,13 +23,14 @@ export class AnggotaAuthService extends AuthService {
       jwtService,
       config,
     );
+    this.anggotaRepository = anggotaRepository;
   }
 
   async getAllAnggota() {
     return await this.anggotaRepository.find();
   }
 
-  async registerAnggota(registerAnggotaDto: RegisterAnggotaDto) {
+  async registerAnggota(registerAnggotaDto: RegisterAnggotaDto, createdUser: string) {
     await this.anggotaRepository.query(
       'CALL sp_M_Anggota_Insert(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @p_Message)',
       [
@@ -46,16 +47,18 @@ export class AnggotaAuthService extends AuthService {
         registerAnggotaDto.SimpananWajib,
         registerAnggotaDto.SimpananSukarela,
         registerAnggotaDto.AlamatEmail,
-        registerAnggotaDto.CreatedUser,
+        createdUser
       ],
     );
-    const rows: { p_Message?: string }[] = (await this.anggotaRepository.query(
+
+    const [out] = await this.anggotaRepository.query(
       'SELECT @p_Message AS p_Message',
-    )) as { p_Message?: string }[];
-    return rows[0]?.p_Message;
+    );
+
+    return out?.p_Message as string;
   }
 
-  async updateAnggota(updateAnggotaDto: UpdateAnggotaDto) {
+  async updateAnggota(updateAnggotaDto: UpdateAnggotaDto, createdUser: string) {
     await this.anggotaRepository.query(
       'CALL sp_M_Anggota_Update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @p_Message)',
       [
@@ -72,7 +75,7 @@ export class AnggotaAuthService extends AuthService {
         updateAnggotaDto.SimpananWajib,
         updateAnggotaDto.SimpananSukarela,
         updateAnggotaDto.AlamatEmail,
-        updateAnggotaDto.CreatedUser,
+        createdUser,
       ],
     );
     const rows: { p_Message?: string }[] = (await this.anggotaRepository.query(

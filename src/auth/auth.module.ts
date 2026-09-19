@@ -7,12 +7,15 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt-strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './entities/auth.entity';
+import { Anggota } from './entities/anggota.entity';
+import { AnggotaAuthController } from './anggota-auth.controller';
+import { AnggotaAuthService } from './anggota-auth.service';
 
 @Module({
   imports: [
     ConfigModule,
     PassportModule.register({}),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Anggota]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -22,8 +25,8 @@ import { User } from './entities/auth.entity';
       }),
     }),
   ],
-  controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  controllers: [AuthController, AnggotaAuthController],
+  providers: [AuthService, JwtStrategy, AnggotaAuthService],
   exports: [AuthService, JwtModule, PassportModule, TypeOrmModule],
 })
 export class AuthModule { }
