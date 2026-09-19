@@ -53,4 +53,8 @@ export class RegisterAnggotaDto {
   @IsNotEmpty()
   @IsEmail()
   AlamatEmail: string;
+
+  @IsString()
+  @IsNotEmpty()
+  CreatedUser: string;
 }

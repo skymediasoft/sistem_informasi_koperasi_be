@@ -29,7 +29,7 @@ export class SettingSimpananService {
 
   async updateApply(createSimpananDto: CreateSimpananDto) {
     return await this.settingSimpananRepository.query(
-      'EXEC sp_update_Setting_Simpanan @p_SimpananPokok = @0, @p_SimpananWajib = @1, @p_SimpananSukarela = @2',
+      'CALL sp_update_Setting_Simpanan @p_SimpananPokok = @0, @p_SimpananWajib = @1, @p_SimpananSukarela = @2',
       [createSimpananDto.SimpananPokok, createSimpananDto.SimpananWajib, createSimpananDto.SimpananSukarela],
     );
   }
