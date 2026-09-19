@@ -34,6 +34,7 @@ export class AnggotaAuthService extends AuthService {
   }
 
   async registerAnggota(registerAnggotaDto: RegisterAnggotaDto, createdUser: string) {
+    
     await this.anggotaRepository.query(
       'CALL sp_M_Anggota_Insert(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @p_Message)',
       [

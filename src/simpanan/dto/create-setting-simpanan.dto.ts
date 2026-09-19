@@ -1,6 +1,6 @@
 import { IsInt, IsNotEmpty } from 'class-validator';
 
-export class CreateSimpananDto {
+export class CreateSettingSimpananDto {
     @IsInt()
     @IsNotEmpty()
     SimpananPokok: number;

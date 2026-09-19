@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSimpananDto } from './dto/create-setting-simpanan.dto';
-import { UpdateSimpananDto } from './dto/update-setting-simpanan.dto';
+import { CreateSettingSimpananDto } from './dto/create-setting-simpanan.dto';
+import { UpdateSettingSimpananDto } from './dto/update-setting-simpanan.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SettingSimpanan } from './entities/setting-simpanan.entity';
 import { Repository } from 'typeorm/browser/repository/Repository.js';
@@ -11,22 +11,19 @@ export class SettingSimpananService {
     @InjectRepository(SettingSimpanan)
     private readonly settingSimpananRepository: Repository<SettingSimpanan>
   ) {}
-  create(createSimpananDto: CreateSimpananDto) {
-    return 'This action adds a new simpanan';
-  }
 
   async findAll() {
     const settings = await this.settingSimpananRepository.find();
     return settings[0];
   }
 
-  async update(id: number, updateSimpananDto: UpdateSimpananDto) {
-    return await this.settingSimpananRepository.update(id, updateSimpananDto);
+  async update(id: number, updateSettingSimpananDto: UpdateSettingSimpananDto) {
+    return await this.settingSimpananRepository.update(id, updateSettingSimpananDto);
   }
 
-  async updateApply(createSimpananDto: CreateSimpananDto) {
+  async updateApply(createSettingSimpananDto: CreateSettingSimpananDto) {
     await this.settingSimpananRepository.query('SET @SimpananPokok = ?, @SimpananWajib = ?, @SimpananSukarela = ?', 
-      [createSimpananDto.SimpananPokok, createSimpananDto.SimpananWajib, createSimpananDto.SimpananSukarela]);
+      [createSettingSimpananDto.SimpananPokok, createSettingSimpananDto.SimpananWajib, createSettingSimpananDto.SimpananSukarela]);
     return await this.settingSimpananRepository.query(
       'CALL sp_Update_Setting_Simpanan (@SimpananPokok, @SimpananWajib, @SimpananSukarela);'
     );

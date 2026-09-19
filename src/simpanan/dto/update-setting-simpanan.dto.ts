@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateSimpananDto } from './create-setting-simpanan.dto';
+import { CreateSettingSimpananDto } from './create-setting-simpanan.dto';
 
-export class UpdateSimpananDto extends PartialType(CreateSimpananDto) {}
+export class UpdateSettingSimpananDto extends PartialType(CreateSettingSimpananDto) {}
