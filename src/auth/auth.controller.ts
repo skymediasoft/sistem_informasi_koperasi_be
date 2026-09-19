@@ -14,8 +14,8 @@ export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(@Body() registerDto: RegisterDto, @Request() req: { user: JwtPayloadDto }) {
+    return this.authService.register(registerDto, req.user.userlogin);
   }
 
   @Post('login')

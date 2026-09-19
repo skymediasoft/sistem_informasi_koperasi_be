@@ -23,7 +23,7 @@ export class AuthService {
     private readonly config: ConfigService,
   ) { }
 
-  private async generateTokens(jwtPayloadDto: JwtPayloadDto) {
+  public async generateTokens(jwtPayloadDto: JwtPayloadDto) {
     const payload = {
       sub: jwtPayloadDto.userlogin,
       name: jwtPayloadDto.username,
@@ -43,19 +43,11 @@ export class AuthService {
   }
 
   async getAllUsers() {
-    return await this.userRepository.find({
-      select: {
-        userLogin: true,
-        userName: true,
-        userEmail: true,
-        postBy: true,
-        postDate: true,
-        groupId: true,
-      }
-    }); 
+    const queryResults = await this.userRepository.query('CALL sp_view_user_login()');
+    return queryResults[0];
   }
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterDto, createdUser: string) {
     const userlogin = registerDto.userlogin;
     const username = registerDto.username;
     const { password, email, groupId } = registerDto;
@@ -78,7 +70,7 @@ export class AuthService {
       userPassword: hashedPassword,
       userEmail: email,
       groupId: groupId,
-      postBy: 'SYSTEM',
+      postBy: createdUser,
     });
     const user = await this.userRepository.save(newUser);
     const { accessToken, refreshToken } = await this.generateTokens({

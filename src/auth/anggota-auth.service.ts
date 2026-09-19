@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Anggota } from './entities/anggota.entity';
 import { Repository } from 'typeorm';
@@ -8,6 +8,9 @@ import { AuthService } from './auth.service';
 import { User } from './entities/auth.entity';
 import { RegisterAnggotaDto } from './dto/register-anggota.dto';
 import { UpdateAnggotaDto } from './dto/update-anggota.dto';
+import { LoginDto } from './dto/login.dto';
+import { BadRequestException } from '@nestjs/common';
+import { bcrypt } from 'bcrypt';
 
 @Injectable()
 export class AnggotaAuthService extends AuthService {
@@ -27,7 +30,7 @@ export class AnggotaAuthService extends AuthService {
   }
 
   async getAllAnggota() {
-    return await this.anggotaRepository.find();
+    return await this.anggotaRepository.query('SELECT * FROM vw_M_Anggota');
   }
 
   async registerAnggota(registerAnggotaDto: RegisterAnggotaDto, createdUser: string) {
@@ -58,6 +61,38 @@ export class AnggotaAuthService extends AuthService {
     return out?.p_Message as string;
   }
 
+  async loginAnggota(loginDto: LoginDto) {
+    const { userlogin, password } = loginDto;
+    const anggota = await this.anggotaRepository.findOne({ where: { NoEmployee: userlogin } });
+
+    if (!userlogin || !password) {
+          throw new BadRequestException('userlogin and password are required');
+        }
+    
+        const user = await this.anggotaRepository.findOne({ where: { NoEmployee: userlogin } });
+        if (!user) {
+          throw new UnauthorizedException('Invalid credentials');
+        }
+    
+        const isPasswordValid = await bcrypt.compare(password, user.PasswordLogin);
+        if (!isPasswordValid) {
+          throw new UnauthorizedException('Invalid credentials');
+        }
+    
+        const { accessToken, refreshToken } = await this.generateTokens({
+          userlogin: user.NoEmployee,
+          username: user.Nama,
+          email: user.AlamatEmail || '',
+          groupId: 0,
+        });
+    
+        return {
+          access_token: accessToken,
+          refresh_token: refreshToken,
+          success: 1,
+        };
+  }
+
   async updateAnggota(updateAnggotaDto: UpdateAnggotaDto, createdUser: string) {
     await this.anggotaRepository.query(
       'CALL sp_M_Anggota_Update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @p_Message)',
@@ -78,16 +113,17 @@ export class AnggotaAuthService extends AuthService {
         createdUser,
       ],
     );
-    const rows: { p_Message?: string }[] = (await this.anggotaRepository.query(
+    
+    const [out] = await this.anggotaRepository.query(
       'SELECT @p_Message AS p_Message',
-    )) as { p_Message?: string }[];
-    return rows[0]?.p_Message;
+    );
+
+    return out?.p_Message as string;
   }
 
   async deleteAnggota(noAnggota: string) {
     await this.anggotaRepository.delete({ NoAnggota: noAnggota });
   }
-
 }
 
   
