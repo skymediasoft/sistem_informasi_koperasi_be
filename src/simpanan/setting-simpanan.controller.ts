@@ -12,11 +12,6 @@ export class SettingSimpananController {
     return this.simpananService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.simpananService.findOne(+id);
-  }
-
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSimpananDto: UpdateSimpananDto) {
     return this.simpananService.update(+id, updateSimpananDto);

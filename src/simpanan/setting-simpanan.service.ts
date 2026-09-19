@@ -16,11 +16,8 @@ export class SettingSimpananService {
   }
 
   async findAll() {
-    return await this.settingSimpananRepository.find();
-  }
-
-  async findOne(id: number) {
-    return await this.settingSimpananRepository.findOneBy({ ID: id });
+    const settings = await this.settingSimpananRepository.find();
+    return settings[0];
   }
 
   async update(id: number, updateSimpananDto: UpdateSimpananDto) {
