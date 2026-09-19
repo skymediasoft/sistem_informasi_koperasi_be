@@ -29,6 +29,10 @@ export class AnggotaAuthService extends AuthService {
     this.anggotaRepository = anggotaRepository;
   }
 
+  async getAnggota(noAnggota: string) {
+    return await this.anggotaRepository.findOne({ where: { NoAnggota: noAnggota } });
+  }
+
   async getAllAnggota() {
     return await this.anggotaRepository.query('SELECT * FROM vw_M_Anggota');
   }
@@ -95,10 +99,11 @@ export class AnggotaAuthService extends AuthService {
         };
   }
 
-  async updateAnggota(updateAnggotaDto: UpdateAnggotaDto, createdUser: string) {
-    await this.anggotaRepository.query(
-      'CALL sp_M_Anggota_Update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @p_Message)',
+  async updateAnggota(updateAnggotaDto: UpdateAnggotaDto, updatedUser: string, noAnggota: string) {
+    const result = await this.anggotaRepository.query(
+      'CALL sp_M_Anggota_Update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @p_Message)',
       [
+        noAnggota,                      
         updateAnggotaDto.NoEmployee,
         updateAnggotaDto.Nama,
         updateAnggotaDto.Alamat,
@@ -111,16 +116,23 @@ export class AnggotaAuthService extends AuthService {
         updateAnggotaDto.SimpananPokok,
         updateAnggotaDto.SimpananWajib,
         updateAnggotaDto.SimpananSukarela,
+        updateAnggotaDto.StatusAnggota,
         updateAnggotaDto.AlamatEmail,
-        createdUser,
+        updatedUser,
       ],
     );
+
+    if (result.affectedRows === 0) {
+      throw new BadRequestException('No data was updated.');
+    }
     
     const [out] = await this.anggotaRepository.query(
       'SELECT @p_Message AS p_Message',
     );
 
-    return out?.p_Message as string;
+    const message = out?.p_Message as string;
+
+    return { message };
   }
 
   async deleteAnggota(noAnggota: string) {

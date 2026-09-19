@@ -1,0 +1,23 @@
+info:
+  name: Login Anggota
+  type: http
+  seq: 13
+
+http:
+  method: POST
+  url: localhost:3000/anggota-auth/login
+  body:
+    type: json
+    data: |-
+      {
+        "userlogin": "IB0091",
+        "password": "password"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

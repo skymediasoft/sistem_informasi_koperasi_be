@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/browser/repository/Repository.js';
 import { TransaksiSimpanan } from './entities/transaksi-simpanan.entity';
+import { SubmitTransaksiSimpananPostingDto } from './dto/submit-transaksi-simpanan-posting.dto';
 
 @Injectable()
 export class TransaksiSimpananService {
@@ -17,10 +18,16 @@ export class TransaksiSimpananService {
     return queryResult[0];
   }
 
-  async PostingTransaksiSimpanan() {
+  async SubmitTransaksiSimpananPosting(dto: SubmitTransaksiSimpananPostingDto, createdUser: string) {
     const queryResult = await this.transaksiSimpananRepository.query(
-      'CALL sp_Posting_Transaksi_Simpanan();'
+      'CALL sp_Submit_Transaksi_Simpanan_Posting(?, ?, ?, ?, ?, ?, ?, ?, @p_Message);',
+      [ dto. IDTransaksi, dto.Tanggal, dto.TotalAnggota, dto.TotalSimpananPokok, dto.TotalSimpananWajib, dto.TotalSimpananSukarela, dto.TotalSimpanan, createdUser ]
     );
-    return queryResult[0];
+
+    const [out] = await this.transaksiSimpananRepository.query(
+      'SELECT @p_Message AS p_Message',
+    );
+
+    return out?.p_Message as string;
   }
 }

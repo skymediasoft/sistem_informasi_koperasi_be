@@ -1,0 +1,37 @@
+info:
+  name: Update Anggota
+  type: http
+  seq: 15
+
+http:
+  method: PATCH
+  url: localhost:3000/anggota-auth/update/2006-0001
+  body:
+    type: json
+    data: |-
+      {
+        "NoEmployee": "B91841",
+        "Nama": "Budi Santoso",
+        "Alamat": "Jl. Merdeka No. 12, Bandung",
+        "Telpon": "081234567890",
+        "JenisKelamin": "L",
+        "DepartmentId": "1",
+        "JenisAnggota": "EXCELITAS",
+        "TanggalMasuk": "2025-01-15",
+        "NoRekening": "1122334455",
+        "SimpananPokok": 500000,
+        "SimpananWajib": 100000,
+        "SimpananSukarela": 250000,
+        "StatusAnggota": "AKTIF",
+        "AlamatEmail": "budi.santoso@example.com"
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IlN1cHJpaGF0aW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjEsImlhdCI6MTc4OTgxMDU4MiwiZXhwIjoxNzg5ODExNDgyfQ.j3WSkTJfdai9PvfdVZbhKLX4WJRR7G5DXTo5rnKXdjo
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

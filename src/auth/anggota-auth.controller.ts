@@ -9,24 +9,30 @@ import { LoginDto } from './dto/login.dto';
 @Controller('anggota-auth')
 export class AnggotaAuthController {
     constructor(private readonly anggotaAuthService: AnggotaAuthService) { }
-    
-    @UseGuards(JwtAuthGuard)
-    @Post('register')
-    async registerAnggota(@Body() registerAnggotaDto: RegisterAnggotaDto, @Request() req: { user: JwtPayloadDto }) {
-    return this.anggotaAuthService.registerAnggota(registerAnggotaDto, req.user.username);
-    }
-
-    @Patch('update')
-    async updateAnggota(@Body() updateAnggotaDto: UpdateAnggotaDto, @Request() req: { user: JwtPayloadDto }) {
-        return this.anggotaAuthService.updateAnggota(updateAnggotaDto, req.user.username);
-    }
 
     @Get('all')
     async getAllAnggota() {
         return this.anggotaAuthService.getAllAnggota();
     }
+    
+    @Get(':noAnggota')
+    async getAnggota(@Param('noAnggota') noAnggota: string) {
+        return this.anggotaAuthService.getAnggota(noAnggota);
+    }
 
-    @Delete(':id')
+    @UseGuards(JwtAuthGuard)
+    @Post('register')
+    async registerAnggota(@Body() registerAnggotaDto: RegisterAnggotaDto, @Request() req: { user: JwtPayloadDto }) {
+        return this.anggotaAuthService.registerAnggota(registerAnggotaDto, req.user.username);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('update/:id')
+    async updateAnggota(@Body() updateAnggotaDto: UpdateAnggotaDto, @Request() req: { user: JwtPayloadDto }, @Param('id') id: string) {
+        return this.anggotaAuthService.updateAnggota(updateAnggotaDto, req.user.username, id);
+    }
+
+    @Delete('delete/:id')
     async deleteAnggota(@Param('id') id: string) {
         return this.anggotaAuthService.deleteAnggota(id);
     }
