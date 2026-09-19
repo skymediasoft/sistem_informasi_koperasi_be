@@ -16,4 +16,7 @@ export class JwtPayloadDto {
 
   @IsNumber()
   groupId?: number;
+
+  @IsString()
+  noAnggota?: string;
 }

@@ -10,7 +10,7 @@ import { RegisterAnggotaDto } from './dto/register-anggota.dto';
 import { UpdateAnggotaDto } from './dto/update-anggota.dto';
 import { LoginDto } from './dto/login.dto';
 import { BadRequestException } from '@nestjs/common';
-import { bcrypt } from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AnggotaAuthService extends AuthService {
@@ -63,13 +63,13 @@ export class AnggotaAuthService extends AuthService {
 
   async loginAnggota(loginDto: LoginDto) {
     const { userlogin, password } = loginDto;
-    const anggota = await this.anggotaRepository.findOne({ where: { NoEmployee: userlogin } });
 
     if (!userlogin || !password) {
           throw new BadRequestException('userlogin and password are required');
         }
     
         const user = await this.anggotaRepository.findOne({ where: { NoEmployee: userlogin } });
+
         if (!user) {
           throw new UnauthorizedException('Invalid credentials');
         }
@@ -81,6 +81,7 @@ export class AnggotaAuthService extends AuthService {
     
         const { accessToken, refreshToken } = await this.generateTokens({
           userlogin: user.NoEmployee,
+          noAnggota: user.NoAnggota,
           username: user.Nama,
           email: user.AlamatEmail || '',
           groupId: 0,

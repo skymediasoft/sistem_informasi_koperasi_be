@@ -29,6 +29,7 @@ export class AuthService {
       name: jwtPayloadDto.username,
       email: jwtPayloadDto.email,
       groupId: jwtPayloadDto.groupId,
+      noAnggota: jwtPayloadDto.noAnggota,
     };
 
     const accessToken = await this.jwtService.signAsync(payload);
@@ -124,7 +125,7 @@ export class AuthService {
       throw new BadRequestException('refreshToken is required');
     }
 
-    let payload: { sub?: string; userlogin?: string; name?: string; username?: string; email?: string; groupId?: number };
+    let payload: { sub?: string; userlogin?: string; name?: string; username?: string; email?: string; groupId?: number; noAnggota?: string };
     try {
       payload = await this.jwtService.verifyAsync(refreshToken, {
         secret: this.config.getOrThrow<string>('JWT_REFRESH_SECRET'),
@@ -147,6 +148,7 @@ export class AuthService {
       username: user.userName,
       email: user.userEmail || '',
       groupId: user.groupId,
+      noAnggota: payload.noAnggota,
     });
     return {
       access_token: accessToken,

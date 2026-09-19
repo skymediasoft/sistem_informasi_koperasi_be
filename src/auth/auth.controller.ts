@@ -7,7 +7,6 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtPayloadDto } from './dto/jwt-payload.dto';
 import { UpdateDto } from './dto/update.dto';
-import { DeleteDateColumn } from 'typeorm/browser';
 
 @Controller('auth')
 export class AuthController {
