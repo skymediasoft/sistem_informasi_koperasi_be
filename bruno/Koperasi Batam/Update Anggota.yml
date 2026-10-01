@@ -4,14 +4,14 @@ info:
   seq: 15
 
 http:
-  method: PATCH
-  url: localhost:3000/anggota-auth/update/2006-0001
+  method: DELETE
+  url: localhost:3000/anggota-auth/delete/2026-0003
   body:
     type: json
     data: |-
       {
-        "NoEmployee": "B91841",
-        "Nama": "Budi Santoso",
+        "NoEmployee": "B0001",
+        "Nama": "AUGISTA",
         "Alamat": "Jl. Merdeka No. 12, Bandung",
         "Telpon": "081234567890",
         "JenisKelamin": "L",
@@ -27,7 +27,7 @@ http:
       }
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IlN1cHJpaGF0aW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjEsImlhdCI6MTc4OTgxMDU4MiwiZXhwIjoxNzg5ODExNDgyfQ.j3WSkTJfdai9PvfdVZbhKLX4WJRR7G5DXTo5rnKXdjo
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IlN1cHJpaGF0aW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjEsImlhdCI6MTc4OTgxMTUxNCwiZXhwIjoxNzg5ODEyNDE0fQ.sQtS3JzNSfxBCADxXbpcHM9griIHdD846EcxnkP6b4k
 
 settings:
   encodeUrl: true

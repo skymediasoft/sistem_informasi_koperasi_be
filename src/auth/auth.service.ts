@@ -65,6 +65,7 @@ export class AuthService {
     if (existing) {
       throw new ConflictException('UserLogin already exists');
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = this.userRepository.create({
       userLogin: userlogin,
@@ -74,12 +75,16 @@ export class AuthService {
       groupId: groupId,
       postBy: createdUser,
     });
+
+    const groupName = await this.userRepository.query('SELECT GroupName FROM M_User_Group WHERE GroupID = ?', [groupId]);
+    
     const user = await this.userRepository.save(newUser);
     const { accessToken, refreshToken } = await this.generateTokens({
       userlogin: user.userLogin,
       username: user.userName,
       email: user.userEmail || '',
       groupId: user.groupId,
+      groupName: groupName
     });
     return {
       access_token: accessToken,
