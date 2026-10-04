@@ -8,7 +8,7 @@ http:
   url: localhost:3000/auth/me
   auth:
     type: bearer
-    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IlN1cHJpaGF0aW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjEsImlhdCI6MTc4OTgxNDUzMiwiZXhwIjoxNzg5ODE1NDMyfQ.bbdFZZThxfiI2FrRAn0jmyl-D1UTOIarbOEyRbzM3BI
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IlN1cHJpaGF0aW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjEsImdyb3VwTmFtZSI6IkFkbWluaXN0cmF0b3IiLCJpYXQiOjE3ODk4MTQ2OTUsImV4cCI6MTc4OTgxNTU5NX0.FFFpQP68SiptD3NTBe9ZyAADyra1j7eggTR1J54KQjU
 
 settings:
   encodeUrl: true

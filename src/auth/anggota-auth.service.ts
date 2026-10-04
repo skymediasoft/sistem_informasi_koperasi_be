@@ -73,7 +73,8 @@ export class AnggotaAuthService extends AuthService {
           throw new BadRequestException('userlogin and password are required');
         }
     
-        const user = await this.anggotaRepository.findOne({ where: { NoEmployee: userlogin } });
+        const [rows] = await this.anggotaRepository.query('CALL sp_Get_Anggota_Login(?)', [userlogin]);
+        const user = rows[0];
 
         if (!user) {
           throw new UnauthorizedException('Invalid credentials');
@@ -90,6 +91,7 @@ export class AnggotaAuthService extends AuthService {
           username: user.Nama,
           email: user.AlamatEmail || '',
           groupId: 0,
+          groupName: user.DepartmentName,
         });
     
         return {

@@ -5,15 +5,15 @@ import { JwtPayloadDto } from '../auth/dto/jwt-payload.dto';
 
 @Controller('transaksi-simpanan')
 export class TransaksiSimpananController {
-  constructor(private readonly simpananService: TransaksiSimpananService) {}
+  constructor(private readonly TransaksiSimpananService: TransaksiSimpananService) {}
 
   @Get()
   findAll() {
-    return this.simpananService.findAll();
+    return this.TransaksiSimpananService.findAll();
   } 
 
   @Post('submit-posting')
   SubmitTransaksiSimpananPosting(@Body() dto: SubmitTransaksiSimpananPostingDto, @Request() req: { user: JwtPayloadDto }) {
-    return this.simpananService.SubmitTransaksiSimpananPosting(dto, req.user.username);
+    return this.TransaksiSimpananService.SubmitTransaksiSimpananPosting(dto, req.user.username);
   }
 }
