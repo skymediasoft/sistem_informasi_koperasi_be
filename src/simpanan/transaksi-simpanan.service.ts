@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/browser/repository/Repository.js';
 import { TransaksiSimpanan } from './entities/transaksi-simpanan.entity';
 import { SubmitTransaksiSimpananPostingDto } from './dto/submit-transaksi-simpanan-posting.dto';
+import { HistoryTransaksiSimpananPostingDto } from './dto/history-transaksi-simpanan-posting.dto';
 
 @Injectable()
 export class TransaksiSimpananService {
@@ -11,17 +12,17 @@ export class TransaksiSimpananService {
     private readonly transaksiSimpananRepository: Repository<TransaksiSimpanan>
   ) {}
 
-  async findAll() {
+  async GetTransaksiSimpananPosting() {
     const queryResult = await this.transaksiSimpananRepository.query(
-      'CALL sp_Get_Transaksi_Simpanan_Posting();'
+      'CALL sp_Transaksi_Simpanan_Posting_Get();'
     );
     return queryResult[0];
   }
 
   async SubmitTransaksiSimpananPosting(dto: SubmitTransaksiSimpananPostingDto, createdUser: string) {
     const queryResult = await this.transaksiSimpananRepository.query(
-      'CALL sp_Submit_Transaksi_Simpanan_Posting(?, ?, ?, ?, ?, ?, ?, ?, @p_Message);',
-      [ dto. IDTransaksi, dto.Tanggal, dto.TotalAnggota, dto.TotalSimpananPokok, dto.TotalSimpananWajib, dto.TotalSimpananSukarela, dto.TotalSimpanan, createdUser ]
+      'CALL sp_Transaksi_Simpanan_Posting_Submit(?, ?, @p_Message);',
+      [ dto.Tanggal, createdUser ]
     );
 
     const [out] = await this.transaksiSimpananRepository.query(
@@ -30,4 +31,22 @@ export class TransaksiSimpananService {
 
     return out?.p_Message as string;
   }
+
+  async HistoryTransaksiSimpananPosting(dto: HistoryTransaksiSimpananPostingDto) {
+    const queryResult = await this.transaksiSimpananRepository.query(
+      'CALL sp_History_Transaksi_Simpanan_Posting(?);',
+      [dto.Tahun]
+    );
+    return queryResult[0];
+  }
+
+  async ViewDetailTransaksiSimpananPosting(IDTransaksi: string) {
+    const queryResult = await this.transaksiSimpananRepository.query(
+      'CALL sp_Transaksi_Simpanan_Posting_View_Detail(?);',
+      [IDTransaksi]
+    );
+    return queryResult[0];
+  }
+
+  
 }

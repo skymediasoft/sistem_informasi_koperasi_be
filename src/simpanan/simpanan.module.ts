@@ -6,9 +6,10 @@ import { SettingSimpananController } from './setting-simpanan.controller';
 import { SettingSimpanan } from './entities/setting-simpanan.entity';
 import { TransaksiSimpanan } from './entities/transaksi-simpanan.entity';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports : [TypeOrmModule.forFeature([SettingSimpanan, TransaksiSimpanan])],
+  imports : [TypeOrmModule.forFeature([SettingSimpanan, TransaksiSimpanan]), AuthModule],
   controllers: [TransaksiSimpananController, SettingSimpananController],
   providers: [TransaksiSimpananService, SettingSimpananService],
 })
