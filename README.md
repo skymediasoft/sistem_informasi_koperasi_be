@@ -57,6 +57,10 @@ $ pnpm run start:dev
 $ pnpm run start:prod
 ```
 
+The backend uses NestJS 11 to remain compatible with Vercel's CommonJS
+function build. Deployments must install from the committed lockfile so the
+resolved NestJS versions are preserved.
+
 ## Run tests
 
 ```bash
