@@ -5,6 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "packageManager": "pnpm@11.23.0",
   "scripts": {
     "build": "nest build",
     "deploy": "nest deploy",
@@ -58,9 +59,7 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.1.2"
   },
-  "pnpm": {
-    "overrides": {
-      "magic-string": "^0.30.11"
-    }
+  "overrides": {
+    "magic-string": "^0.30.11"
   }
 }
