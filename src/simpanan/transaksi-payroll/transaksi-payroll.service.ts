@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/browser/repository/Repository.js';
-import { TransaksiSimpanan } from './entities/transaksi-simpanan.entity';
-import { SubmitTransaksiSimpananPostingDto } from './dto/submit-transaksi-simpanan-posting.dto';
-import { HistoryTransaksiSimpananPostingDto } from './dto/history-transaksi-simpanan-posting.dto';
+import { TransaksiSimpanan } from '../entities/transaksi-simpanan.entity';
+import { SubmitTransaksiSimpananPostingDto } from '../dto/submit-transaksi-simpanan-posting.dto';
+import { HistoryTransaksiSimpananPostingDto } from '../dto/history-transaksi-simpanan-posting.dto';
 
 @Injectable()
-export class TransaksiSimpananService {
+export class TransaksiPayrollService {
   constructor(
     @InjectRepository(TransaksiSimpanan)
     private readonly transaksiSimpananRepository: Repository<TransaksiSimpanan>
   ) {}
-
+  
   async GetTransaksiSimpananPosting() {
     const queryResult = await this.transaksiSimpananRepository.query(
       'CALL sp_Transaksi_Simpanan_Posting_Get();'
@@ -47,6 +47,4 @@ export class TransaksiSimpananService {
     );
     return queryResult[0];
   }
-
-  
 }

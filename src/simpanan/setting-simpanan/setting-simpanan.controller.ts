@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { CreateSettingSimpananDto } from './dto/create-setting-simpanan.dto';
-import { UpdateSettingSimpananDto } from './dto/update-setting-simpanan.dto';
+import { CreateSettingSimpananDto } from '../dto/create-setting-simpanan.dto';
+import { UpdateSettingSimpananDto } from '../dto/update-setting-simpanan.dto';
 import { SettingSimpananService } from './setting-simpanan.service';
 
 @Controller('setting-simpanan')
