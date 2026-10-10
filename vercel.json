@@ -1,10 +1,7 @@
 {
   "functions": {
     "src/main.ts": {
-      "includeFiles": [
-        "node_modules/swagger-ui-dist/**/*",
-        "node_modules/.pnpm/swagger-ui-dist@*/node_modules/swagger-ui-dist/**/*"
-      ]
+      "includeFiles": "node_modules/swagger-ui-dist/**/*"
     }
   }
 }
