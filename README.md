@@ -31,6 +31,19 @@
 $ pnpm install
 ```
 
+## Swagger API documentation
+
+Swagger UI is available at `/api/docs` and requires the `SWAGGER_KEY` environment
+variable:
+
+```text
+http://localhost:3000/api/docs?key=<SWAGGER_KEY>
+```
+
+The key is stored in an HTTP-only cookie after the initial authorized request so
+Swagger UI assets can load without adding the key to every asset URL. Keep the
+key out of committed files and provide it through the runtime environment.
+
 ## Compile and run the project
 
 ```bash
