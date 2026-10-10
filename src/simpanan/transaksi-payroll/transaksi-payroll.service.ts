@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm/browser/repository/Repository.js';
+import { Repository } from 'typeorm';
 import { TransaksiSimpanan } from '../entities/transaksi-simpanan.entity';
 import { SubmitTransaksiSimpananPostingDto } from '../dto/submit-transaksi-simpanan-posting.dto';
 import { HistoryTransaksiSimpananPostingDto } from '../dto/history-transaksi-simpanan-posting.dto';

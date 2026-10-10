@@ -3,7 +3,7 @@ import { CreateSettingSimpananDto } from '../dto/create-setting-simpanan.dto';
 import { UpdateSettingSimpananDto } from '../dto/update-setting-simpanan.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SettingSimpanan } from '../entities/setting-simpanan.entity';
-import { Repository } from 'typeorm/browser/repository/Repository.js';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SettingSimpananService {

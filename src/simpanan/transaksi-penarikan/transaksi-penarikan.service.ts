@@ -3,7 +3,7 @@ import { ViewTransaksiPenarikanDto  } from '../dto/view-transaksi-penarikan.dto'
 import { SubmitTransaksiPenarikanDto } from '../dto/submit-transaksi-penarikan.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TransaksiPenarikan } from '../entities/transaksi-penarikan.entity';
-import { Repository } from 'typeorm/browser/repository/Repository.js';
+import { Repository } from 'typeorm';
 import { CloseTransaksiPenarikanDto } from '../dto/close-transaksi-penarikan.dto';
 import { TransaksiPenarikanResign } from '../entities/transaksi-penarikan-resign.entity';
 import { SubmitTransaksiPenarikanResignDto } from '../dto/submit-transaksi-penarikan-resign.dto';
