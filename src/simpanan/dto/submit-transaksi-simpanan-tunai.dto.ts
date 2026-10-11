@@ -24,8 +24,4 @@ export class SubmitTransaksiSimpananTunaiDto {
   @IsNumber()
   @IsNotEmpty()
   JumlahBulan: number;
-
-  @IsString()
-  @IsNotEmpty()
-  CreatedUser: string;
 }
