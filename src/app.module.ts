@@ -5,11 +5,11 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './auth/entities/auth.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as mysql from 'mysql2';
 import { DepartmentModule } from './department/department.module';
 import { MenuModule } from './menu/menu.module';
 import { GroupModule } from './group/group.module';
 import { SimpananModule } from './simpanan/simpanan.module';
-
 
 @Module({
   imports: [
@@ -25,6 +25,7 @@ import { SimpananModule } from './simpanan/simpanan.module';
         username: configService.get<string>('SQL_USERNAME'),
         password: configService.get<string>('SQL_PASSWORD'),
         database: configService.get<string>('SQL_DATABASE'),
+        driver: mysql,
         entities: [User],
         autoLoadEntities: true,
         synchronize: false,
@@ -38,4 +39,4 @@ import { SimpananModule } from './simpanan/simpanan.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

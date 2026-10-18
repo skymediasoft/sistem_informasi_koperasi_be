@@ -1,0 +1,26 @@
+info:
+  name: Close Transaksi Penarikan Resign
+  type: http
+  seq: 26
+
+http:
+  method: POST
+  url: https://sistem-informasi-koperasi-be.vercel.app/transaksi-penarikan/resign/close
+  body:
+    type: json
+    data: |-
+      {
+        "IDPengambilan": 1,
+        "TanggalTransfer": "2026-10-11",
+        "NoRef": "REF-RESIGN-2026-0001"
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IlN1cHJpaGF0aW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjEsImdyb3VwTmFtZSI6IkFkbWluaXN0cmF0b3IiLCJpYXQiOjE3OTE3Mjk0OTMsImV4cCI6MTc5MTczMDM5M30.0zqrDNc6Ldm_vt6YpCF5rnMXQoaPeUQahgTduUoejIk
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

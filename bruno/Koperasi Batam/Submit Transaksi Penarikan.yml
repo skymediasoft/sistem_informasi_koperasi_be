@@ -1,0 +1,29 @@
+info:
+  name: Submit Transaksi Penarikan
+  type: http
+  seq: 21
+
+http:
+  method: POST
+  url: https://sistem-informasi-koperasi-be.vercel.app/transaksi-penarikan/submit
+  body:
+    type: json
+    data: |-
+      {
+        "IDPengambilan": 1,
+        "IDTransaksiSimpanan": 1,
+        "Tanggal": "2026-10-11",
+        "NoAnggota": "2026-0001",
+        "JenisSimpanan": "WAJIB",
+        "Jumlah": 100000
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IlN1cHJpaGF0aW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjEsImdyb3VwTmFtZSI6IkFkbWluaXN0cmF0b3IiLCJpYXQiOjE3OTE3Mjk0OTMsImV4cCI6MTc5MTczMDM5M30.0zqrDNc6Ldm_vt6YpCF5rnMXQoaPeUQahgTduUoejIk
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
