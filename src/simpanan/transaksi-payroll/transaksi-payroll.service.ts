@@ -34,7 +34,7 @@ export class TransaksiPayrollService {
 
   async HistoryTransaksiSimpananPosting(dto: HistoryTransaksiSimpananPostingDto) {
     const queryResult = await this.transaksiSimpananRepository.query(
-      'CALL sp_History_Transaksi_Simpanan_Posting(?);',
+      'CALL sp_Transaksi_Simpanan_Posting_View(?);',
       [dto.Tahun]
     );
     return queryResult[0];
