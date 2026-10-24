@@ -35,7 +35,7 @@ export class TransaksiPenarikanService {
 
 	async SubmitTransaksiSimpananPenarikan(dto: SubmitTransaksiPenarikanDto, createdUser: string) {
 		const saldoTable = await this.transaksiPenarikanRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Get_Saldo(?, ?);',
-			[dto.NoAnggota, dto.JenisSimpanan]
+			[dto.NoEmployee, dto.JenisSimpanan]
 		);	
 
 		// select b.NoEmployee, b.NoAnggota, b.Nama, SUM(Jumlah) as Saldo 
@@ -47,7 +47,7 @@ export class TransaksiPenarikanService {
 		}
 
 		await this.transaksiPenarikanRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Submit(?, ?, ?, ?, ?, ?, ?, @p_Message);',
-			[dto.IDPengambilan, dto.IDTransaksiSimpanan, dto.Tanggal, dto.NoAnggota, dto.JenisSimpanan, dto.Jumlah, createdUser]
+			[dto.IDPengambilan, dto.IDTransaksiSimpanan, dto.Tanggal, dto.NoEmployee, dto.JenisSimpanan, dto.Jumlah, createdUser]
 		);
 
 		const [out] = await this.transaksiPenarikanRepository.query(

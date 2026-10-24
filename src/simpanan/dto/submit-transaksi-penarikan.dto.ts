@@ -15,7 +15,7 @@ export class SubmitTransaksiPenarikanDto {
 
     @IsString()
     @IsNotEmpty()
-    NoAnggota: string;
+    NoEmployee: string;
 
     @IsString()
     @IsNotEmpty()
