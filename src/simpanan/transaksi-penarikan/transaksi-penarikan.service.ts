@@ -34,7 +34,19 @@ export class TransaksiPenarikanService {
 	}
 
 	async SubmitTransaksiSimpananPenarikan(dto: SubmitTransaksiPenarikanDto, createdUser: string) {
-		const queryResult = await this.transaksiPenarikanRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Submit(?, ?, ?, ?, ?, ?, ?, @p_Message);',
+		const saldoTable = await this.transaksiPenarikanRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Get_Saldo(?, ?);',
+			[dto.NoAnggota, dto.JenisSimpanan]
+		);	
+
+		// select b.NoEmployee, b.NoAnggota, b.Nama, SUM(Jumlah) as Saldo 
+		const rowSaldo = saldoTable?.[0]?.[0];
+		const totalSaldo = Number(rowSaldo?.Saldo ?? 0);
+
+		if(totalSaldo < dto.Jumlah) {
+			throw new Error(`Saldo tidak mencukupi.`);
+		}
+
+		await this.transaksiPenarikanRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Submit(?, ?, ?, ?, ?, ?, ?, @p_Message);',
 			[dto.IDPengambilan, dto.IDTransaksiSimpanan, dto.Tanggal, dto.NoAnggota, dto.JenisSimpanan, dto.Jumlah, createdUser]
 		);
 

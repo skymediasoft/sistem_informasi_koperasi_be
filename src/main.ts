@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { dirname, join } from 'node:path';
 import type { NextFunction, Request, Response } from 'express';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
@@ -59,18 +58,6 @@ async function bootstrap() {
   });
 
   app.use('/api/docs', protectSwagger);
-  const swaggerUiDirectory = dirname(
-    require.resolve('swagger-ui-dist/swagger-ui.css'),
-  );
-  for (const asset of [
-    'swagger-ui.css',
-    'swagger-ui-bundle.js',
-    'swagger-ui-standalone-preset.js',
-  ]) {
-    app.getHttpAdapter().get(`/api/docs/${asset}`, (_req, res) => {
-      res.sendFile(join(swaggerUiDirectory, asset));
-    });
-  }
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Sistem Informasi Koperasi API')
