@@ -5,7 +5,7 @@ info:
 
 http:
   method: PATCH
-  url: localhost:3000/auth/users/edit
+  url: localhost:3000/users
   auth: inherit
 
 settings:

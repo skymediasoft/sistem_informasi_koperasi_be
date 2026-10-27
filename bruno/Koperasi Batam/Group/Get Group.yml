@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: localhost:3000/group
+  url: localhost:3000/groups
   auth: inherit
 
 settings:
@@ -18,7 +18,7 @@ settings:
 examples:
   - name: Get Group response
     request:
-      url: localhost:3000/group
+      url: localhost:3000/groups
       method: GET
     response:
       status: 200

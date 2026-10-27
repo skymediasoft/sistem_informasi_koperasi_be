@@ -5,16 +5,7 @@ info:
 
 http:
   method: GET
-  url: https://sistem-informasi-koperasi-be.vercel.app/tunai
-  body:
-    type: json
-    data: |-
-      {
-        "JenisSimpanan": "SIMPANAN WAJIB",
-        "DateFrom": "2026-01-01",
-        "DateTo": "2026-12-31",
-        "NoKaryawan": "B57396"
-      }
+  url: https://sistem-informasi-koperasi-be.vercel.app/cash-transactions?JenisSimpanan=SIMPANAN%20WAJIB&DateFrom=2026-01-01&DateTo=2026-12-31&NoKaryawan=B57396
 
 settings:
   encodeUrl: true

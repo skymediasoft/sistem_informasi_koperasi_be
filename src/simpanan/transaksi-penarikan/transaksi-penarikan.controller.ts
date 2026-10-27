@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { JwtPayloadDto } from '../../auth/dto/jwt-payload.dto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { CloseTransaksiPenarikanDto } from '../dto/close-transaksi-penarikan.dto';
@@ -7,16 +7,16 @@ import { SubmitTransaksiPenarikanResignDto } from '../dto/submit-transaksi-penar
 import { ViewTransaksiPenarikanDto } from '../dto/view-transaksi-penarikan.dto';
 import { TransaksiPenarikanService } from './transaksi-penarikan.service';
 
-@Controller('transaksi-penarikan')
+@Controller('withdrawals')
 export class TransaksiPenarikanController {
   constructor(private readonly transaksiPenarikanService: TransaksiPenarikanService) {}
 
   @Get()
-  ViewTransaksiSimpananPenarikan(@Body() dto: ViewTransaksiPenarikanDto) {
+  ViewTransaksiSimpananPenarikan(@Query() dto: ViewTransaksiPenarikanDto) {
     return this.transaksiPenarikanService.ViewTransaksiSimpananPenarikan(dto);
   }
 
-  @Post('submit')
+  @Post()
   @UseGuards(JwtAuthGuard)
   SubmitTransaksiSimpananPenarikan(
     @Body() dto: SubmitTransaksiPenarikanDto,
@@ -34,26 +34,26 @@ export class TransaksiPenarikanController {
     return this.transaksiPenarikanService.CloseTransaksiSimpananPenarikan(dto);
   }
 
-  @Get('resign')
-  ViewTransaksiSimpananPenarikanResign(@Body() dto: ViewTransaksiPenarikanDto) {
+  @Get('resignations')
+  ViewTransaksiSimpananPenarikanResign(@Query() dto: ViewTransaksiPenarikanDto) {
     return this.transaksiPenarikanService.ViewTransaksiSimpananPenarikanResign(dto);
   }
 
-  @Get('resign/:idPengambilan')
+  @Get('resignations/:withdrawalId')
   GetTransaksiSimpananPenarikanResign(
-    @Param('idPengambilan') idPengambilan: string,
+    @Param('withdrawalId') idPengambilan: string,
   ) {
     return this.transaksiPenarikanService.GetTransaksiSimpananPenarikanResign(
       idPengambilan,
     );
   }
 
-  @Get(':idPengambilan')
-  GetTransaksiSimpananPenarikan(@Param('idPengambilan') idPengambilan: string) {
+  @Get(':withdrawalId')
+  GetTransaksiSimpananPenarikan(@Param('withdrawalId') idPengambilan: string) {
     return this.transaksiPenarikanService.GetTransaksiSimpananPenarikan(idPengambilan);
   }
 
-  @Post('resign/submit')
+  @Post('resignations')
   @UseGuards(JwtAuthGuard)
   SubmitTransaksiSimpananPenarikanResign(
     @Body() dto: SubmitTransaksiPenarikanResignDto,
@@ -65,7 +65,7 @@ export class TransaksiPenarikanController {
     );
   }
 
-  @Post('resign/close')
+  @Post('resignations/close')
   @UseGuards(JwtAuthGuard)
   CloseTransaksiSimpananPenarikanResign(@Body() dto: CloseTransaksiPenarikanDto) {
     return this.transaksiPenarikanService.CloseTransaksiSimpananPenarikanResign(dto);

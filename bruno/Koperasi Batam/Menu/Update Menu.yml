@@ -5,7 +5,7 @@ info:
 
 http:
   method: PATCH
-  url: localhost:3000/menu/44
+  url: localhost:3000/menus/44
   body:
     type: json
     data: |-
@@ -28,7 +28,7 @@ settings:
 examples:
   - name: Update menu
     request:
-      url: localhost:3000/menu/44
+      url: localhost:3000/menus/44
       method: PATCH
       body:
         type: json

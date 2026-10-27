@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: localhost:3000/menu/create
+  url: localhost:3000/menus
   body:
     type: json
     data: |-
@@ -28,7 +28,7 @@ settings:
 examples:
   - name: Create Parent result
     request:
-      url: localhost:3000/menu/create
+      url: localhost:3000/menus
       method: POST
       body:
         type: json

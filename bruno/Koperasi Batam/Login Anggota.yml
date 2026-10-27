@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: localhost:3000/anggota-auth/login
+  url: localhost:3000/auth/members/login
   body:
     type: json
     data: |-

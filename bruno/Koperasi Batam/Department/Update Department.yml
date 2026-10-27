@@ -5,7 +5,7 @@ info:
 
 http:
   method: PATCH
-  url: localhost:3000/department/1
+  url: localhost:3000/departments/1
   body:
     type: json
     data: |-
@@ -26,7 +26,7 @@ settings:
 examples:
   - name: Update Department by Id
     request:
-      url: localhost:3000/department/1
+      url: localhost:3000/departments/1
       method: PATCH
       body:
         type: json

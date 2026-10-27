@@ -4,8 +4,8 @@ info:
   seq: 3
 
 http:
-  method: PATCH
-  url: localhost:3000/group/auth/2
+  method: PUT
+  url: localhost:3000/groups/2/permissions
   auth: inherit
 
 settings:

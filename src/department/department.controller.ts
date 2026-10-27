@@ -5,11 +5,11 @@ import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { JwtPayloadDto } from "../auth/dto/jwt-payload.dto";
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@Controller('department')
+@Controller('departments')
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
   
-  @Post('create')
+  @Post()
   @UseGuards(JwtAuthGuard)
   create(@Body() createDepartmentDto: CreateDepartmentDto, @Request() req: { user: JwtPayloadDto }) {
     return this.departmentService.create({ ...createDepartmentDto, departmentCreatedUser: req.user.userlogin });

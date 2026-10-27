@@ -5,7 +5,7 @@ info:
 
 http:
   method: DELETE
-  url: localhost:3000/anggota-auth/delete/2026-0003
+  url: localhost:3000/members/2026-0003
   body:
     type: json
     data: |-

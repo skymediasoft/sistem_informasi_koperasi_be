@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: localhost:3000/setting-simpanan
+  url: localhost:3000/savings-settings
   auth: inherit
 
 settings:

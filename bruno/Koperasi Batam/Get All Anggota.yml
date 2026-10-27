@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: localhost:3000/anggota-auth/all
+  url: localhost:3000/members
   auth: inherit
 
 settings:

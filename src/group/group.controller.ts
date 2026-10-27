@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Put, Param, Delete, UseGuards, Request, Req } from '@nestjs/common';
 import { GroupService } from './group.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
@@ -6,7 +6,7 @@ import { CreateGroupAuthDto } from './dto/create-group-auth.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { JwtPayloadDto } from '../auth/dto/jwt-payload.dto';
 
-@Controller('group')
+@Controller('groups')
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
@@ -31,23 +31,23 @@ export class GroupController {
     return this.groupService.remove(+id);
   }
 
-  @Get('auth/:id')
-  findGroupAuth(@Param('id') id: string) {
+  @Get(':groupId/permissions')
+  findGroupAuth(@Param('groupId') id: string) {
     return this.groupService.findGroupAuth(+id);
   }
 
-  @Post('auth')
+  @Post('permissions')
   createGroupAuths(@Body() createGroupAuthDto: CreateGroupAuthDto[]) {
     return this.groupService.createGroupAuth(createGroupAuthDto);
   }
 
-  @Delete('auth/:id')
-  removeGroupAuth(@Param('id') id: string) {
+  @Delete(':groupId/permissions')
+  removeGroupAuth(@Param('groupId') id: string) {
     return this.groupService.removeGroupAuth(+id);
   }
 
-  @Patch('auth/:id')
-  updateGroupAuth(@Param('id') id: string, @Body() createGroupAuthDto: CreateGroupAuthDto[]) {
+  @Put(':groupId/permissions')
+  updateGroupAuth(@Param('groupId') id: string, @Body() createGroupAuthDto: CreateGroupAuthDto[]) {
     return this.groupService.updateGroupAuth(+id, createGroupAuthDto);
   }
 }

@@ -3,7 +3,7 @@ import { CreateSettingSimpananDto } from '../dto/create-setting-simpanan.dto';
 import { UpdateSettingSimpananDto } from '../dto/update-setting-simpanan.dto';
 import { SettingSimpananService } from './setting-simpanan.service';
 
-@Controller('setting-simpanan')
+@Controller('savings-settings')
 export class SettingSimpananController {
   constructor(private readonly simpananService: SettingSimpananService) {}
   
@@ -17,7 +17,7 @@ export class SettingSimpananController {
     return this.simpananService.update(+id, updateSettingSimpananDto);
   }
 
-  @Post('update-apply')
+  @Post('apply')
   updateApply(@Body() createSettingSimpananDto: CreateSettingSimpananDto) {
     return this.simpananService.updateApply(createSettingSimpananDto);
   }

@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: localhost:3000/department/1
+  url: localhost:3000/departments/1
   auth:
     type: bearer
     token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IkFkbWluIDEiLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjIsImlhdCI6MTc4ODU5ODA4NywiZXhwIjoxNzg4NTk4OTg3fQ.dveD3fpLxkXNmIlldeAWSK5o4UCoIOGW38jBnWL-VNM
@@ -20,7 +20,7 @@ settings:
 examples:
   - name: Get Department Id Response
     request:
-      url: localhost:3000/department/1
+      url: localhost:3000/departments/1
       method: GET
     response:
       status: 200

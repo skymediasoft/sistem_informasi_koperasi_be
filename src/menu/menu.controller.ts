@@ -5,22 +5,22 @@ import { UpdateMenuDto } from './dto/update-menu.dto';
 import { JwtPayloadDto } from "../auth/dto/jwt-payload.dto";
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@Controller('menu')
+@Controller('menus')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 
-  @Post('create')
+  @Post()
   @UseGuards(JwtAuthGuard)
   createParent(@Body() createMenuDto: CreateMenuDto, @Request() req: { user: JwtPayloadDto }) {
     return this.menuService.create({...createMenuDto, postBy: req.user.userlogin });
   }
 
-  @Get('parent')
+  @Get('parents')
   findAllParentMenu() {
     return this.menuService.findAllParent();
   }
 
-  @Get('child/:id')
+  @Get(':id/children')
   findAllChildMenu(@Param('id') id: string) {
     return this.menuService.findAllChild(BigInt(id));
   }

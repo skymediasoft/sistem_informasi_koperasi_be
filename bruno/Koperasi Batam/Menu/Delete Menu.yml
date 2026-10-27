@@ -5,7 +5,7 @@ info:
 
 http:
   method: DELETE
-  url: localhost:3000/menu/43
+  url: localhost:3000/menus/43
   auth:
     type: bearer
     token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IlN1cHJpaGF0aW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjEsImlhdCI6MTc4OTE5NjQxNiwiZXhwIjoxNzg5MTk3MzE2fQ.Ge_uOVMLsl3sSxs9p-wnQU05mCNNHeb3rx3YtoT48Vg
@@ -20,7 +20,7 @@ settings:
 examples:
   - name: Delete response
     request:
-      url: localhost:3000/menu/43
+      url: localhost:3000/menus/43
       method: DELETE
     response:
       status: 200

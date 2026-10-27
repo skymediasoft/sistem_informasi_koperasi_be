@@ -5,7 +5,7 @@ info:
 
 http:
   method: DELETE
-  url: localhost:3000/department/3
+  url: localhost:3000/departments/3
   auth:
     type: bearer
     token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdXBlcmFkbWluIiwibmFtZSI6IkFkbWluIDEiLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImdyb3VwSWQiOjIsImlhdCI6MTc4ODU5ODU1MiwiZXhwIjoxNzg4NTk5NDUyfQ.3zq9dROnMk564JqZIsDnBQR_dI3wybKdLcPkIF-FAVU
@@ -20,7 +20,7 @@ settings:
 examples:
   - name: Delete department response
     request:
-      url: localhost:3000/department/3
+      url: localhost:3000/departments/3
       method: DELETE
     response:
       status: 200

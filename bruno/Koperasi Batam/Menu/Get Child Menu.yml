@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: localhost:3000/menu/child/1
+  url: localhost:3000/menus/1/children
   auth: inherit
 
 settings:
@@ -18,7 +18,7 @@ settings:
 examples:
   - name: Get All parent menu
     request:
-      url: localhost:3000/menu/child/1
+      url: localhost:3000/menus/1/children
       method: GET
     response:
       status: 200

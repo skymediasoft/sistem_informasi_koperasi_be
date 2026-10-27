@@ -5,16 +5,7 @@ info:
 
 http:
   method: GET
-  url: https://sistem-informasi-koperasi-be.vercel.app/transaksi-penarikan
-  body:
-    type: json
-    data: |-
-      {
-        "Status": "OPEN",
-        "DateFrom": "2026-01-01",
-        "DateTo": "2026-12-31",
-        "NoKaryawan": ""
-      }
+  url: https://sistem-informasi-koperasi-be.vercel.app/withdrawals?Status=OPEN&DateFrom=2026-01-01&DateTo=2026-12-31&NoKaryawan=
   auth: none
 
 settings:

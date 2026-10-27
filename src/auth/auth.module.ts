@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
+import { UsersController } from './users.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt-strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -25,7 +26,7 @@ import { AnggotaAuthService } from './anggota-auth.service';
       }),
     }),
   ],
-  controllers: [AuthController, AnggotaAuthController],
+  controllers: [AuthController, UsersController, AnggotaAuthController],
   providers: [AuthService, JwtStrategy, AnggotaAuthService],
   exports: [AuthService, JwtModule, PassportModule, TypeOrmModule],
 })

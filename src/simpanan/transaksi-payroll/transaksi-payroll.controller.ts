@@ -4,7 +4,7 @@ import { SubmitTransaksiSimpananPostingDto } from '../dto/submit-transaksi-simpa
 import { JwtPayloadDto } from '../../auth/dto/jwt-payload.dto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
-@Controller('payroll')
+@Controller('payroll-postings')
 export class TransaksiPayrollController {
   constructor(private readonly transaksiPayrollService: TransaksiPayrollService) {}
 
@@ -13,17 +13,17 @@ export class TransaksiPayrollController {
     return this.transaksiPayrollService.GetTransaksiSimpananPosting();
   } 
 
-  @Get('history/:tahun')
-  HistoryTransaksiSimpananPosting(@Param('tahun') tahun: number) {
+  @Get('history/:year')
+  HistoryTransaksiSimpananPosting(@Param('year') tahun: number) {
     return this.transaksiPayrollService.HistoryTransaksiSimpananPosting({ Tahun: tahun });
   }
 
-  @Get('view-detail/:IDTransaksi')
-  ViewDetailTransaksiSimpananPosting(@Param('IDTransaksi') IDTransaksi: string) {
+  @Get(':transactionId')
+  ViewDetailTransaksiSimpananPosting(@Param('transactionId') IDTransaksi: string) {
     return this.transaksiPayrollService.ViewDetailTransaksiSimpananPosting(IDTransaksi);
   }
 
-  @Post('submit-posting')
+  @Post()
   @UseGuards(JwtAuthGuard)
   SubmitTransaksiSimpananPosting(@Body() dto: SubmitTransaksiSimpananPostingDto, @Request() req: { user: JwtPayloadDto }) {
     return this.transaksiPayrollService.SubmitTransaksiSimpananPosting(dto, req.user.username);

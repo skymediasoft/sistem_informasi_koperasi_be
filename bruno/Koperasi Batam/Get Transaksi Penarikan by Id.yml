@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: https://sistem-informasi-koperasi-be.vercel.app/transaksi-penarikan/1
+  url: https://sistem-informasi-koperasi-be.vercel.app/withdrawals/1
   auth: none
 
 settings:

@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: localhost:3000/department/create
+  url: localhost:3000/departments
   body:
     type: json
     data: |-
@@ -27,7 +27,7 @@ settings:
 examples:
   - name: Create Department Response
     request:
-      url: localhost:3000/department/create
+      url: localhost:3000/departments
       method: POST
       body:
         type: json

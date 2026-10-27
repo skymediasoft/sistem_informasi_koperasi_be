@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: localhost:3000/group/auth/
+  url: localhost:3000/groups/1/permissions
   auth: inherit
 
 settings:

@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: https://sistem-informasi-koperasi-be.vercel.app/transaksi-penarikan/resign/close
+  url: https://sistem-informasi-koperasi-be.vercel.app/withdrawals/resignations/close
   body:
     type: json
     data: |-
