@@ -1,6 +1,7 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsIn, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateGroupAuthDto {
+    @IsOptional()
     @IsNumber()
     menuAuthId?: number;
 
@@ -13,6 +14,6 @@ export class CreateGroupAuthDto {
     menuId: number;
 
     @IsNotEmpty()
-    @IsNumber()
+    @IsIn([0, 1])
     access: number;
 }

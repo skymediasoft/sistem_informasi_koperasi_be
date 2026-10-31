@@ -1,4 +1,4 @@
-import { IsDate, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateGroupDto {
     @IsNotEmpty()
@@ -12,8 +12,5 @@ export class CreateGroupDto {
     @IsNotEmpty()
     @IsString()
     groupNote: string;
-
-    @IsString()
-    postBy: string;
 }
 

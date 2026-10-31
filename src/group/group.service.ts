@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,16 +20,16 @@ export class GroupService {
     private readonly groupAuthorizationRepository: Repository<GroupAuthorization>,
   ) {}
   
-  async create(createGroupDto: CreateGroupDto) {
+  async create(createGroupDto: CreateGroupDto, postBy: string) {
     const existingGroup = await this.groupRepository.findOne({
-      where: { groupName: createGroupDto.groupName },
+      where: [{ groupName: createGroupDto.groupName }, { groupId: createGroupDto.groupId }],
     });
 
     if (existingGroup) {
-      throw new ConflictException('Group name already exists');
+      throw new ConflictException('Group name or id already exists');
     }
 
-    return await this.groupRepository.save(createGroupDto);
+    return await this.groupRepository.save({ ...createGroupDto, PostBy: postBy });
   }
 
   async findAllGroups() {
@@ -115,8 +115,8 @@ export class GroupService {
       throw new NotFoundException('Group not found');
     }
 
-    const groupAuths = createGroupAuthDto.map(dto => this.groupAuthorizationRepository.create(dto));
-    await this.groupAuthorizationRepository.save(groupAuths);
+    const groupAuths = this.toAuthRows(groupId, createGroupAuthDto);
+    await this.groupAuthorizationRepository.insert(groupAuths);
 
     return {
       message: 'Group authorization created successfully',
@@ -146,11 +146,30 @@ async removeGroupAuth(id: number) {
       throw new NotFoundException('Group not found');
     }
 
-    await this.removeGroupAuth(id);
-    await this.createGroupAuth(createGroupAuthDto);
+    const rows = this.toAuthRows(id, createGroupAuthDto);
+
+    // delete + insert in one transaction, so a failed insert cannot leave the group without permissions
+    await this.groupAuthorizationRepository.manager.transaction(async (manager) => {
+      await manager.delete(GroupAuthorization, { groupId: id });
+      if (rows.length > 0) {
+        await manager.insert(GroupAuthorization, rows);
+      }
+    });
 
     return {
       message: 'Group authorization updated successfully',
     }
+  }
+
+  private toAuthRows(groupId: number, dtos: CreateGroupAuthDto[]) {
+    if (dtos.some((dto) => dto.groupId !== groupId)) {
+      throw new BadRequestException(`Every item must have groupId ${groupId}`);
+    }
+
+    if (new Set(dtos.map((dto) => dto.menuId)).size !== dtos.length) {
+      throw new BadRequestException('Duplicate menuId in request');
+    }
+
+    return dtos.map(({ menuId, access }) => ({ groupId, menuId, access }));
   }
 }

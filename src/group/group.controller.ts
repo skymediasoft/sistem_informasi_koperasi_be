@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Put, Param, Delete, UseGuards, Request, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Put, Param, Delete, UseGuards, Request, Req, ParseArrayPipe } from '@nestjs/common';
 import { GroupService } from './group.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { CreateGroupAuthDto } from './dto/create-group-auth.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { JwtPayloadDto } from '../auth/dto/jwt-payload.dto';
+
+// add validation pipe
+const groupAuthArrayPipe = new ParseArrayPipe({ items: CreateGroupAuthDto, whitelist: true, forbidNonWhitelisted: true });
 
 @Controller('groups')
 export class GroupController {
@@ -13,7 +16,7 @@ export class GroupController {
   @Post()
   @UseGuards(JwtAuthGuard)
   create(@Body() createGroupDto: CreateGroupDto, @Request() req: { user: JwtPayloadDto }) {
-    return this.groupService.create({...createGroupDto, postBy: req.user.userlogin});
+    return this.groupService.create(createGroupDto, req.user.userlogin);
   }
 
   @Get()
@@ -37,7 +40,7 @@ export class GroupController {
   }
 
   @Post('permissions')
-  createGroupAuths(@Body() createGroupAuthDto: CreateGroupAuthDto[]) {
+  createGroupAuths(@Body(groupAuthArrayPipe) createGroupAuthDto: CreateGroupAuthDto[]) {
     return this.groupService.createGroupAuth(createGroupAuthDto);
   }
 
@@ -47,7 +50,7 @@ export class GroupController {
   }
 
   @Put(':groupId/permissions')
-  updateGroupAuth(@Param('groupId') id: string, @Body() createGroupAuthDto: CreateGroupAuthDto[]) {
+  updateGroupAuth(@Param('groupId') id: string, @Body(groupAuthArrayPipe) createGroupAuthDto: CreateGroupAuthDto[]) {
     return this.groupService.updateGroupAuth(+id, createGroupAuthDto);
   }
 }
