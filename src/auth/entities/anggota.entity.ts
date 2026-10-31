@@ -47,7 +47,7 @@ export class Anggota {
     @Column({ name: 'StatusAnggota', type: 'varchar', length: 20, nullable: true })
     StatusAnggota: string;
 
-    @Column({ name: 'PasswordLogin', type: 'varchar', length: 1000, nullable: true })
+    @Column({ name: 'PasswordLogin', type: 'varchar', length: 1000, nullable: true, select: false })
     PasswordLogin: string;
 
     @Column({ name: 'AlamatEmail', type: 'varchar', length: 200, nullable: true })

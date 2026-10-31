@@ -30,7 +30,7 @@ export class AnggotaAuthService extends AuthService {
   }
 
   async getAnggota(noAnggota: string) {
-    return await this.anggotaRepository.findOne({ where: { NoAnggota: noAnggota } });
+    return await this.anggotaRepository.findOne({ where: { NoAnggota: noAnggota }});
   }
 
   async getAllAnggota() {

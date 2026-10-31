@@ -39,15 +39,18 @@ export class MenuService {
   }
 
   async update(id: number, updateMenuDto: UpdateMenuDto) {
-    const isExist = await this.menuRepository.exists({
-      where: {
-        menuName: updateMenuDto.menuName,
-        menuID: Not(id),
-      },
-    });
+    // if menuName exist, then check, if not no need.
+    if (updateMenuDto.menuName) {
+      const isExist = await this.menuRepository.exists({
+        where: {
+          menuName: updateMenuDto.menuName,
+          menuID: Not(id),
+        },
+      });
 
-    if (isExist) {
-      throw new ConflictException('Cannot change menu name to one that already exists');
+      if (isExist) {
+        throw new ConflictException('Cannot change menu name to one that already exists');
+      }
     }
 
     return this.menuRepository.update(id, {

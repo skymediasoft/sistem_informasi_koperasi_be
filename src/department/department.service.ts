@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
@@ -43,13 +43,13 @@ export class DepartmentService {
     return this.departmentRepository.findOne({ where: { departmentId: id } });
   }
 
-  update(id: string, updateDepartmentDto: UpdateDepartmentDto) {
+  async update(id: string, updateDepartmentDto: UpdateDepartmentDto) {
     const { departmentName } = updateDepartmentDto;
 
-    const updatedDepartment = this.departmentRepository.update(id, { departmentName });
+    const updatedDepartment = await this.departmentRepository.update(id, { departmentName });
 
-    if (!updatedDepartment) {
-      throw new BadRequestException('Updated department failed');
+    if (!updatedDepartment.affected) {
+      throw new NotFoundException('Department not found');
     }
 
     return {
@@ -57,11 +57,11 @@ export class DepartmentService {
     }
   }
 
-  remove(id: string) {
-    const deletedDepartment = this.departmentRepository.delete(id);
+  async remove(id: string) {
+    const deletedDepartment = await  this.departmentRepository.delete(id);
 
-    if (!deletedDepartment) {
-      throw new BadRequestException('Deleted department failed');
+    if (!deletedDepartment.affected) {
+      throw new NotFoundException('Department not found');
     }
 
     return {

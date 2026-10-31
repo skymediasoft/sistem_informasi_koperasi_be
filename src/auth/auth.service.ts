@@ -45,8 +45,7 @@ export class AuthService {
   }
 
   async getAllUsers() {
-    const queryResults = await this.userRepository.query('CALL sp_view_user_login()');
-    return queryResults[0];
+    return await this.userRepository.query('SELECT * FROM vw_M_User_Login');
   }
 
   async register(registerDto: RegisterDto, createdUser: string) {
@@ -193,10 +192,10 @@ export class AuthService {
       throw new BadRequestException('userlogin is required');
     }
 
+    const exist = userlogin !== userloginInput &&  
+    await this.userRepository.exists({ where: { userLogin: userloginInput } });    
 
-  const exist = userlogin !== userloginInput &&
-  await this.userRepository.exists({ where: { userLogin: userlogin } });    
-  if (exist) {
+    if (exist) {
       throw new ConflictException('UserLogin already exists');
     }
 
