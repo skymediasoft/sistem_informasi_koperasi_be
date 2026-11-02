@@ -1,39 +1,34 @@
 import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
-import { Group } from './entities/group.entity';
-import { Menu } from '../menu/entities/menu.entity';
-import { GroupAuthorization } from './entities/group-authorization.entity';
 import { CreateGroupAuthDto } from './dto/create-group-auth.dto';
-
+import { DatabaseService } from '../database/database.service';
+import { GroupRepository } from './group.repository';
 
 @Injectable()
 export class GroupService {
   constructor(
-    @InjectRepository(Group)
-    private readonly groupRepository: Repository<Group>,
-    @InjectRepository(Menu)
-    private readonly menuRepository: Repository<Menu>,
-    @InjectRepository(GroupAuthorization)
-    private readonly groupAuthorizationRepository: Repository<GroupAuthorization>,
+    private readonly groupRepository: GroupRepository,
+    private readonly db: DatabaseService,
   ) {}
-  
+
   async create(createGroupDto: CreateGroupDto, postBy: string) {
-    const existingGroup = await this.groupRepository.findOne({
-      where: [{ groupName: createGroupDto.groupName }, { groupId: createGroupDto.groupId }],
-    });
+    const existingGroup = await this.groupRepository.findByNameOrId(
+      createGroupDto.groupName,
+      createGroupDto.groupId,
+    );
 
     if (existingGroup) {
       throw new ConflictException('Group name or id already exists');
     }
 
-    return await this.groupRepository.save({ ...createGroupDto, PostBy: postBy });
+    await this.groupRepository.insert(createGroupDto, postBy);
+    // re-select so the response carries the DB-filled PostDate
+    return this.groupRepository.findById(createGroupDto.groupId);
   }
 
   async findAllGroups() {
-    const groups = await this.groupRepository.find();
+    const groups = await this.groupRepository.findAll();
     return {
       groups: groups.map(group => ({
         groupId: group.groupId,
@@ -43,7 +38,7 @@ export class GroupService {
   }
 
   async update(id: number, updateGroupDto: UpdateGroupDto) {
-    const group = await this.groupRepository.findOne({ where: { groupId: id } });
+    const group = await this.groupRepository.findById(id);
 
     if (!group) {
       throw new NotFoundException('Group not found');
@@ -57,7 +52,7 @@ export class GroupService {
   }
 
   async remove(id: number) {
-    const group = await this.groupRepository.findOne({ where: { groupId: id } });
+    const group = await this.groupRepository.findById(id);
 
     if (!group) {
       throw new NotFoundException('Group not found');
@@ -71,17 +66,15 @@ export class GroupService {
   }
 
   async findGroupAuth(id: number) {
-    const group = await this.groupRepository.findOne({ where: { groupId: id } });
+    const group = await this.groupRepository.findById(id);
 
     if (!group) {
       throw new NotFoundException('Group not found');
     }
 
-    const menus = await this.menuRepository.find();
-    const groupAuths = await this.groupAuthorizationRepository.find({
-      where: { groupId: id },
-    });
-    
+    const menus = await this.groupRepository.findAllMenuIds();
+    const groupAuths = await this.groupRepository.findAuthsByGroup(id);
+
     const authMap = new Map<number, number>();
     for (const auth of groupAuths) {
       authMap.set(auth.menuId, auth.access);
@@ -109,14 +102,14 @@ export class GroupService {
     }
 
     const groupId = createGroupAuthDto[0].groupId;
-    const group = await this.groupRepository.findOne({ where: { groupId } });
+    const group = await this.groupRepository.findById(groupId);
 
     if (!group) {
       throw new NotFoundException('Group not found');
     }
 
     const groupAuths = this.toAuthRows(groupId, createGroupAuthDto);
-    await this.groupAuthorizationRepository.insert(groupAuths);
+    await this.groupRepository.insertAuths(groupAuths);
 
     return {
       message: 'Group authorization created successfully',
@@ -124,23 +117,23 @@ export class GroupService {
     }
   }
 
-async removeGroupAuth(id: number) {
-    const group = await this.groupRepository.findOne({ where: { groupId: id } });
+  async removeGroupAuth(id: number) {
+    const group = await this.groupRepository.findById(id);
 
     if (!group) {
       throw new NotFoundException('Group not found');
     }
 
-    const removedGroupAuth = await this.groupAuthorizationRepository.delete({ groupId: id });    
-   
+    const affected = await this.groupRepository.deleteAuthsByGroup(id);
+
     return {
       message: 'Group authorization removed successfully',
-      removedGroupAuth,
+      removedGroupAuth: { affected },
     }
   }
 
   async updateGroupAuth(id: number, createGroupAuthDto: CreateGroupAuthDto[]) {
-    const group = await this.groupRepository.findOne({ where: { groupId: id } });
+    const group = await this.groupRepository.findById(id);
 
     if (!group) {
       throw new NotFoundException('Group not found');
@@ -149,10 +142,10 @@ async removeGroupAuth(id: number) {
     const rows = this.toAuthRows(id, createGroupAuthDto);
 
     // delete + insert in one transaction, so a failed insert cannot leave the group without permissions
-    await this.groupAuthorizationRepository.manager.transaction(async (manager) => {
-      await manager.delete(GroupAuthorization, { groupId: id });
+    await this.db.transaction(async (conn) => {
+      await this.groupRepository.deleteAuthsByGroup(id, conn);
       if (rows.length > 0) {
-        await manager.insert(GroupAuthorization, rows);
+        await this.groupRepository.insertAuths(rows, conn);
       }
     });
 

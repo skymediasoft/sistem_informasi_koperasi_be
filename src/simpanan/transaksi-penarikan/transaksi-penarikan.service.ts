@@ -1,25 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ViewTransaksiPenarikanDto  } from '../dto/view-transaksi-penarikan.dto';
 import { SubmitTransaksiPenarikanDto } from '../dto/submit-transaksi-penarikan.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { TransaksiPenarikan } from '../entities/transaksi-penarikan.entity';
-import { Repository } from 'typeorm';
+import { DatabaseService } from '../../database/database.service';
 import { CloseTransaksiPenarikanDto } from '../dto/close-transaksi-penarikan.dto';
-import { TransaksiPenarikanResign } from '../entities/transaksi-penarikan-resign.entity';
 import { SubmitTransaksiPenarikanResignDto } from '../dto/submit-transaksi-penarikan-resign.dto';
 
 @Injectable()
 export class TransaksiPenarikanService {
-	constructor(
-		@InjectRepository(TransaksiPenarikan)
-		private readonly transaksiPenarikanRepository: Repository<TransaksiPenarikan>,
-		@InjectRepository(TransaksiPenarikanResign)
-		private readonly transaksiPenarikanResignRepository: Repository<TransaksiPenarikanResign>
-	) {}
+	constructor(private readonly db: DatabaseService) {}
 
 	// penarikan biasa
 	async ViewTransaksiSimpananPenarikan(dto: ViewTransaksiPenarikanDto) {
-		const queryResult = await this.transaksiPenarikanRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_View(?, ?, ?, ?);',
+		const queryResult = await this.db.query('CALL sp_Transaksi_Penarikan_Simpanan_View(?, ?, ?, ?);',
 			[dto.Status, dto.DateFrom, dto.DateTo, dto.NoKaryawan]
 		);
 
@@ -27,14 +19,14 @@ export class TransaksiPenarikanService {
 	}
 
 	async GetTransaksiSimpananPenarikan(idPengambilan: string) {
-		const queryResult = await this.transaksiPenarikanRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Get(?);',
+		const queryResult = await this.db.query('CALL sp_Transaksi_Penarikan_Simpanan_Get(?);',
 			[idPengambilan]
 		);
 		return queryResult[0];	
 	}
 
 	async SubmitTransaksiSimpananPenarikan(dto: SubmitTransaksiPenarikanDto, createdUser: string) {
-		const saldoTable = await this.transaksiPenarikanRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Get_Saldo(?, ?);',
+		const saldoTable = await this.db.query('CALL sp_Transaksi_Penarikan_Simpanan_Get_Saldo(?, ?);',
 			[dto.NoEmployee, dto.JenisSimpanan]
 		);	
 
@@ -46,19 +38,13 @@ export class TransaksiPenarikanService {
 			throw new Error(`Saldo tidak mencukupi.`);
 		}
 
-		await this.transaksiPenarikanRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Submit(?, ?, ?, ?, ?, ?, ?, @p_Message);',
+		return await this.db.callWithMessage('CALL sp_Transaksi_Penarikan_Simpanan_Submit(?, ?, ?, ?, ?, ?, ?, @p_Message);',
 			[dto.IDPengambilan, dto.IDTransaksiSimpanan, dto.Tanggal, dto.NoEmployee, dto.JenisSimpanan, dto.Jumlah, createdUser]
 		);
-
-		const [out] = await this.transaksiPenarikanRepository.query(
-			'SELECT @p_Message AS p_Message',
-		);
-
-		return out?.p_Message as string;
 	}
 
 	async CloseTransaksiSimpananPenarikan(dto: CloseTransaksiPenarikanDto) {
-		const queryResult = await this.transaksiPenarikanRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Close_Transaksi(?, ?, ?);',
+		const queryResult = await this.db.query('CALL sp_Transaksi_Penarikan_Simpanan_Close_Transaksi(?, ?, ?);',
 			[dto.IDPengambilan, dto.TanggalTransfer, dto.NoRef]
 		);
 
@@ -67,7 +53,7 @@ export class TransaksiPenarikanService {
 
 	// penarikan resign
 	async ViewTransaksiSimpananPenarikanResign(dto: ViewTransaksiPenarikanDto) {
-		const queryResult = await this.transaksiPenarikanResignRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Resign_View(?, ?, ?, ?);',
+		const queryResult = await this.db.query('CALL sp_Transaksi_Penarikan_Simpanan_Resign_View(?, ?, ?, ?);',
 			[dto.Status, dto.DateFrom, dto.DateTo, dto.NoKaryawan]
 		);
 
@@ -75,26 +61,20 @@ export class TransaksiPenarikanService {
 	}
 
 	async GetTransaksiSimpananPenarikanResign(idPengambilan: string) {
-		const queryResult = await this.transaksiPenarikanResignRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Resign_Get(?);',
+		const queryResult = await this.db.query('CALL sp_Transaksi_Penarikan_Simpanan_Resign_Get(?);',
 			[idPengambilan]
 		);
 		return queryResult[0];	
 	}
 
 	async SubmitTransaksiSimpananPenarikanResign(dto: SubmitTransaksiPenarikanResignDto, createdUser: string) {
-		const queryResult = await this.transaksiPenarikanResignRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Resign_Submit(?, ?, ?, ?, ?, ?, ?, @p_Message);',
+		return await this.db.callWithMessage('CALL sp_Transaksi_Penarikan_Simpanan_Resign_Submit(?, ?, ?, ?, ?, ?, ?, @p_Message);',
 			[dto.IDPengambilan, dto.Tanggal, dto.NoAnggota, dto.SimpananPokok, dto.SimpananWajib, dto.SimpananSukarela, createdUser]
 		);
-
-		const [out] = await this.transaksiPenarikanResignRepository.query(
-			'SELECT @p_Message AS p_Message',
-		);
-
-		return out?.p_Message as string;
 	}
 
 	async CloseTransaksiSimpananPenarikanResign(dto: CloseTransaksiPenarikanDto) {
-		const queryResult = await this.transaksiPenarikanResignRepository.query('CALL sp_Transaksi_Penarikan_Simpanan_Resign_Close_Transaksi(?, ?, ?);',
+		const queryResult = await this.db.query('CALL sp_Transaksi_Penarikan_Simpanan_Resign_Close_Transaksi(?, ?, ?);',
 			[dto.IDPengambilan, dto.TanggalTransfer, dto.NoRef]
 		);
 

@@ -1,7 +1,5 @@
 import { Injectable, UnauthorizedException, ConflictException, BadRequestException, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { UpdateDto } from './dto/update.dto';
@@ -9,7 +7,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayloadDto } from './dto/jwt-payload.dto';
-import { User } from './entities/auth.entity';
+import { UserRepository } from './user.repository';
 import { randomUUID } from 'crypto';
 import { mapAuthorizationToTree } from './utils/menu-parser.util';
 import * as bcrypt from 'bcrypt';
@@ -17,8 +15,7 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly config: ConfigService,
   ) { }
@@ -45,7 +42,7 @@ export class AuthService {
   }
 
   async getAllUsers() {
-    return await this.userRepository.query('SELECT * FROM vw_M_User_Login');
+    return await this.userRepository.listLoginView();
   }
 
   async register(registerDto: RegisterDto, createdUser: string) {
@@ -60,13 +57,15 @@ export class AuthService {
       throw new BadRequestException('password is required');
     }
 
-    const existing = await this.userRepository.findOne({ where: { userLogin: userlogin } });
+    const existing = await this.userRepository.existsByLogin(userlogin);
     if (existing) {
       throw new ConflictException('UserLogin already exists');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = this.userRepository.create({
+    const groupName = await this.userRepository.findGroupNameRows(groupId);
+
+    await this.userRepository.insert({
       userLogin: userlogin,
       userName: username,
       userPassword: hashedPassword,
@@ -75,20 +74,17 @@ export class AuthService {
       postBy: createdUser,
     });
 
-    const groupName = await this.userRepository.query('SELECT GroupName FROM M_User_Group WHERE GroupID = ?', [groupId]);
-    
-    const user = await this.userRepository.save(newUser);
     const { accessToken, refreshToken } = await this.generateTokens({
-      userlogin: user.userLogin,
-      username: user.userName,
-      email: user.userEmail || '',
-      groupId: user.groupId,
+      userlogin,
+      username,
+      email: email || '',
+      groupId,
       groupName: groupName
     });
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
-      user: { username: user.userLogin, "name": user.userName },
+      user: { username: userlogin, "name": username },
     };
   }
 
@@ -100,8 +96,7 @@ export class AuthService {
       throw new BadRequestException('userlogin and password are required');
     }
 
-    const [rows] = await this.userRepository.query('CALL sp_Get_Users_Login(?)', [userlogin]);
-    const user = rows[0];
+    const user = await this.userRepository.getLoginRow(userlogin);
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -147,7 +142,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token payload');
     }
 
-    const user = await this.userRepository.findOne({ where: { userLogin } });
+    const user = await this.userRepository.findByLogin(userLogin);
     if (!user) {
       throw new UnauthorizedException('Invalid refresh token');
     }
@@ -168,7 +163,7 @@ export class AuthService {
     if (!userLogin) {
       throw new BadRequestException('userLogin is required');
     }
-    const user = await this.userRepository.findOne({ where: { userLogin } });
+    const user = await this.userRepository.findByLogin(userLogin);
     return { message: 'Logged out successfully' };
   }
 
@@ -177,12 +172,7 @@ export class AuthService {
       throw new BadRequestException('User group ID is missing from token');
     }
 
-    const [rows] = await this.userRepository.query(
-      `CALL sp_get_group_authorization(?)`,
-      [groupId]
-    );
-
-    return mapAuthorizationToTree(rows || []);
+    return mapAuthorizationToTree(await this.userRepository.getGroupAuthorization(groupId));
   }
 
   async editUser(updateDto: UpdateDto) {
@@ -193,20 +183,20 @@ export class AuthService {
     }
 
     const exist = userlogin !== userloginInput &&  
-    await this.userRepository.exists({ where: { userLogin: userloginInput } });    
+    await this.userRepository.existsByLogin(userloginInput);    
 
     if (exist) {
       throw new ConflictException('UserLogin already exists');
     }
 
-    const user = await this.userRepository.update({ userLogin: userlogin }, {
+    const affected = await this.userRepository.update(userlogin!, {
       userLogin: userloginInput,
       userName: username,
       userEmail: email,
       groupId: groupId,
     });
 
-    if (user.affected === 0) {
+    if (affected === 0) {
       throw new BadRequestException('User not found or no changes made');
     }
 
@@ -218,9 +208,9 @@ export class AuthService {
       throw new BadRequestException('userlogin is required');
     }
 
-    const user = await this.userRepository.delete({ userLogin: userlogin });
+    const affected = await this.userRepository.delete(userlogin);
 
-    if (user.affected === 0) {
+    if (affected === 0) {
       throw new BadRequestException('User not found');
     }
 
@@ -234,14 +224,13 @@ export class AuthService {
       throw new BadRequestException('userlogin and newPassword are required');
     }
 
-    const user = await this.userRepository.findOne({ where: { userLogin: userlogin } });
+    const user = await this.userRepository.findByLogin(userlogin);
     if (!user) {
       throw new BadRequestException('User not found');
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.userPassword = hashedPassword;
-    await this.userRepository.save(user);
+    await this.userRepository.updatePassword(userlogin, hashedPassword);
 
     return { message: 'Password reset successfully' };
   }

@@ -1,70 +1,49 @@
 import { Injectable, ConflictException } from '@nestjs/common';
-import { Menu } from './entities/menu.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Not, Repository } from 'typeorm';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
+import { MenuRepository } from './menu.repository';
 
 @Injectable()
 export class MenuService {
-  constructor(
-    @InjectRepository(Menu)
-    private readonly menuRepository: Repository<Menu>,
-  ) {}
+  constructor(private readonly menuRepository: MenuRepository) {}
 
   async create(createMenuDto: CreateMenuDto) {
-    const isExist = await this.menuRepository.findOne({ where: { menuName: createMenuDto.menuName } });
-
-    if (isExist) {
+    if (await this.menuRepository.existsByName(createMenuDto.menuName)) {
       throw new ConflictException('Menu already exists');
     }
 
-    const menu = this.menuRepository.create({
+    return this.menuRepository.insert({
       menuName: createMenuDto.menuName,
       menuRoute: createMenuDto.menuRoute,
       menuSort: createMenuDto.menuSort,
       menuParentID: BigInt(createMenuDto.menuParentId ?? 0),
       postBy: createMenuDto.postBy,
-      postDate: new Date(),
     });
-    return this.menuRepository.save(menu);
   }
 
   findAllParent() {
-    return this.menuRepository.find({ where: { menuParentID: 0n } });
+    return this.menuRepository.findParents();
   }
 
   findAllChild(parentid: bigint) {
-    return this.menuRepository.find({ where: { menuParentID: parentid } });
+    return this.menuRepository.findChildren(parentid);
   }
 
   async update(id: number, updateMenuDto: UpdateMenuDto) {
     // if menuName exist, then check, if not no need.
-    if (updateMenuDto.menuName) {
-      const isExist = await this.menuRepository.exists({
-        where: {
-          menuName: updateMenuDto.menuName,
-          menuID: Not(id),
-        },
-      });
-
-      if (isExist) {
-        throw new ConflictException('Cannot change menu name to one that already exists');
-      }
+    if (updateMenuDto.menuName && (await this.menuRepository.existsByName(updateMenuDto.menuName, id))) {
+      throw new ConflictException('Cannot change menu name to one that already exists');
     }
 
-    return this.menuRepository.update(id, {
+    const affected = await this.menuRepository.update(id, {
       menuName: updateMenuDto.menuName,
       menuRoute: updateMenuDto.menuRoute,
       menuSort: updateMenuDto.menuSort,
     });
+    return { affected };
   }
 
-  remove(id: number) {
-    return this.menuRepository
-      .createQueryBuilder()
-      .delete()
-      .where('menuID = :id OR menuParentID = :id', { id })
-      .execute();
+  async remove(id: number) {
+    return { affected: await this.menuRepository.deleteWithChildren(id) };
   }
 }

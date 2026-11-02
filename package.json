@@ -30,7 +30,6 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.2.7",
     "@nestjs/swagger": "^11.4.7",
-    "@nestjs/typeorm": "^11.0.3",
     "@types/passport": "^1.0.17",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
@@ -40,8 +39,7 @@
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "swagger-ui-dist": "^5.32.13",
-    "typeorm": "^1.1.0"
+    "swagger-ui-dist": "^5.32.13"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.24",
