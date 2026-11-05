@@ -1,19 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { TransaksiSimpanan } from '../entities/transaksi-simpanan.entity';
+import { DatabaseService } from '../../database/database.service';
 import { ViewTransaksiSimpananTunaiDto } from '../dto/view-transaksi-simpanan-tunai.dto';
 import { SubmitTransaksiSimpananTunaiDto } from '../dto/submit-transaksi-simpanan-tunai.dto';
 
 @Injectable()
 export class TransaksiTunaiService {
-  constructor(
-    @InjectRepository(TransaksiSimpanan)
-    private readonly transaksiSimpananRepository: Repository<TransaksiSimpanan>
-  ) {}
+  constructor(private readonly db: DatabaseService) {}
 
   async ViewTransaksiSimpananTunai(dto: ViewTransaksiSimpananTunaiDto) {
-    const queryResult = await this.transaksiSimpananRepository.query(
+    const queryResult = await this.db.query(
       'CALL sp_Transaksi_Simpanan_Tunai_View(?, ?, ?, ?);',
       [dto.JenisSimpanan, dto.DateFrom, dto.DateTo, dto.NoKaryawan]
     );
@@ -21,7 +16,7 @@ export class TransaksiTunaiService {
   }
 
   async GetTransaksiSimpananTunai(idTransaksi: string) {
-    const queryResult = await this.transaksiSimpananRepository.query(
+    const queryResult = await this.db.query(
       'CALL sp_Transaksi_Simpanan_Tunai_Get(?);',
       [idTransaksi]
     );
@@ -29,7 +24,7 @@ export class TransaksiTunaiService {
   }
 
   async SubmitTransaksiSimpananTunai(dto: SubmitTransaksiSimpananTunaiDto, createdUser: string) {
-    const queryResult = await this.transaksiSimpananRepository.query(
+    await this.db.query(
       'CALL sp_Transaksi_Simpanan_Tunai_Submit(?, ?, ?, ?, ?, ?, ?);',
       [dto.IDTransaksi, dto.Tanggal, dto.NoAnggota, dto.JenisSimpanan, dto.Jumlah, dto.JumlahBulan, createdUser]
     );

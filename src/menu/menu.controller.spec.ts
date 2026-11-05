@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { MenuController } from './menu.controller';
 import { MenuService } from './menu.service';
-import { Menu } from './entities/menu.entity';
+import { MenuRepository } from './menu.repository';
 
 describe('MenuController', () => {
   let controller: MenuController;
@@ -10,13 +9,7 @@ describe('MenuController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MenuController],
-      providers: [
-        MenuService,
-        {
-          provide: getRepositoryToken(Menu),
-          useValue: {},
-        },
-      ],
+      providers: [MenuService, { provide: MenuRepository, useValue: {} }],
     }).compile();
 
     controller = module.get<MenuController>(MenuController);
