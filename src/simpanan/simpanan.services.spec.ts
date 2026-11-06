@@ -59,6 +59,33 @@ describe('message-returning submits use callWithMessage', () => {
     expect(db.callWithMessage).toHaveBeenCalledTimes(2);
   });
 
+  it('penarikan: GetSaldo returns the SP row with numeric Saldo', async () => {
+    const db = mockDb();
+    db.query.mockResolvedValue([[{ NoEmployee: 'E1', NoAnggota: '2026-0001', Nama: 'Budi', Saldo: 1100000 }]]);
+    const svc = new TransaksiPenarikanService(db as any);
+    expect(await svc.GetSaldoSimpananPenarikan({ NoEmployee: 'E1', JenisSimpanan: 'SIMPANAN SUKARELA' })).toEqual({
+      NoEmployee: 'E1',
+      NoAnggota: '2026-0001',
+      Nama: 'Budi',
+      JenisSimpanan: 'SIMPANAN SUKARELA',
+      Saldo: 1100000,
+    });
+    expect(db.query).toHaveBeenCalledWith('CALL sp_Transaksi_Penarikan_Simpanan_Get_Saldo(?, ?);', ['E1', 'SIMPANAN SUKARELA']);
+  });
+
+  it('penarikan: GetSaldo with no SP row is Saldo 0 (same as submit)', async () => {
+    const db = mockDb();
+    db.query.mockResolvedValue([[]]);
+    const svc = new TransaksiPenarikanService(db as any);
+    expect(await svc.GetSaldoSimpananPenarikan({ NoEmployee: 'NONE', JenisSimpanan: 'SIMPANAN POKOK' })).toEqual({
+      NoEmployee: 'NONE',
+      NoAnggota: null,
+      Nama: null,
+      JenisSimpanan: 'SIMPANAN POKOK',
+      Saldo: 0,
+    });
+  });
+
   it('tunai submit still returns nothing', async () => {
     const db = mockDb();
     expect(await new TransaksiTunaiService(db as any).SubmitTransaksiSimpananTunai({} as any, 'u')).toBeUndefined();

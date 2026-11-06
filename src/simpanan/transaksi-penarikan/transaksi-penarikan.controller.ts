@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from '@
 import { JwtPayloadDto } from '../../auth/dto/jwt-payload.dto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { CloseTransaksiPenarikanDto } from '../dto/close-transaksi-penarikan.dto';
+import { GetSaldoPenarikanDto } from '../dto/get-saldo-penarikan.dto';
 import { SubmitTransaksiPenarikanDto } from '../dto/submit-transaksi-penarikan.dto';
 import { SubmitTransaksiPenarikanResignDto } from '../dto/submit-transaksi-penarikan-resign.dto';
 import { ViewTransaksiPenarikanDto } from '../dto/view-transaksi-penarikan.dto';
@@ -14,6 +15,13 @@ export class TransaksiPenarikanController {
   @Get()
   ViewTransaksiSimpananPenarikan(@Query() dto: ViewTransaksiPenarikanDto) {
     return this.transaksiPenarikanService.ViewTransaksiSimpananPenarikan(dto);
+  }
+
+  // harus sebelum @Get(':withdrawalId'), kalau tidak 'balance' tertangkap sebagai ID
+  @Get('balance')
+  @UseGuards(JwtAuthGuard)
+  GetSaldoSimpananPenarikan(@Query() dto: GetSaldoPenarikanDto) {
+    return this.transaksiPenarikanService.GetSaldoSimpananPenarikan(dto);
   }
 
   @Post()

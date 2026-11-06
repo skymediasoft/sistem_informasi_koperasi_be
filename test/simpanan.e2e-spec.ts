@@ -231,6 +231,24 @@ describe('simpanan + DatabaseService (shared dev DB, E2EC_ rows only)', () => {
     const base = { Tanggal: '2026-11-02', NoEmployee: EMP, JenisSimpanan: SUKARELA };
     const f = { DateFrom: '2026-01-01', DateTo: '2026-12-31', NoKaryawan: EMP };
 
+    const bal = (q: Record<string, string>) => http().get('/withdrawals/balance').query(q);
+
+    it('GET /withdrawals/balance: no JWT -> 401; blank/space/over-long params -> 400', async () => {
+      expect((await bal({ NoEmployee: EMP, JenisSimpanan: SUKARELA })).status).toBe(401);
+      for (const bad of [{ NoEmployee: '', JenisSimpanan: SUKARELA }, { NoEmployee: '   ', JenisSimpanan: SUKARELA }, { NoEmployee: EMP, JenisSimpanan: '' }, { NoEmployee: 'X'.repeat(11), JenisSimpanan: SUKARELA }, { JenisSimpanan: SUKARELA }]) {
+        expect((await bal(bad).set(auth())).status).toBe(400);
+      }
+    });
+
+    it('GET /withdrawals/balance returns the ledger SUM before any withdrawal; unknown employee -> Saldo 0', async () => {
+      const res = await bal({ NoEmployee: EMP, JenisSimpanan: SUKARELA }).set(auth());
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ NoEmployee: EMP, NoAnggota: NO, Nama: expect.any(String), JenisSimpanan: SUKARELA, Saldo: 1100000 });
+      const none = await bal({ NoEmployee: 'E2EC_NONE', JenisSimpanan: SUKARELA }).set(auth());
+      expect(none.status).toBe(200);
+      expect(none.body).toEqual({ NoEmployee: 'E2EC_NONE', NoAnggota: null, Nama: null, JenisSimpanan: SUKARELA, Saldo: 0 });
+    });
+
     it('saldo-insufficient -> 500 "Saldo tidak mencukupi.", nothing written', async () => {
       const res = await http().post('/withdrawals').set(auth()).send({ ...base, IDPengambilan: 0, IDTransaksiSimpanan: 0, Jumlah: 99999999 });
       expect(res.status).toBe(500);
@@ -249,6 +267,12 @@ describe('simpanan + DatabaseService (shared dev DB, E2EC_ rows only)', () => {
       sid = Number(p.IDTransaksiSimpanan);
       expect((await q('SELECT Jumlah j, JenisTransaksi t FROM T_Simpanan_Anggota WHERE IDTransaksi = ?', [sid]))[0]).toEqual({ j: -200000, t: 'PENARIKAN' });
       expect(Number((await q('SELECT SUM(Jumlah) s FROM T_Simpanan_Anggota WHERE NoAnggota = ? AND JenisSimpanan = ?', [NO, SUKARELA]))[0].s)).toBe(1100000 - 200000);
+    });
+
+    it('GET /withdrawals/balance drops by the withdrawn amount', async () => {
+      const res = await bal({ NoEmployee: EMP, JenisSimpanan: SUKARELA }).set(auth());
+      expect(res.status).toBe(200);
+      expect(res.body.Saldo).toBe(1100000 - 200000);
     });
 
     it('SP handler-error path: unknown employee + Jumlah 0 -> 201 text with the SP-produced "Error 1048 ..." message, nothing written', async () => {
