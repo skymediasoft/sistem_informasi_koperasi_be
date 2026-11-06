@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ViewTransaksiPenarikanDto  } from '../dto/view-transaksi-penarikan.dto';
 import { SubmitTransaksiPenarikanDto } from '../dto/submit-transaksi-penarikan.dto';
+import { GetSaldoPenarikanDto } from '../dto/get-saldo-penarikan.dto';
 import { DatabaseService } from '../../database/database.service';
 import { CloseTransaksiPenarikanDto } from '../dto/close-transaksi-penarikan.dto';
 import { SubmitTransaksiPenarikanResignDto } from '../dto/submit-transaksi-penarikan-resign.dto';
@@ -25,13 +26,31 @@ export class TransaksiPenarikanService {
 		return queryResult[0];	
 	}
 
-	async SubmitTransaksiSimpananPenarikan(dto: SubmitTransaksiPenarikanDto, createdUser: string) {
+	// select b.NoEmployee, b.NoAnggota, b.Nama, SUM(Jumlah) as Saldo
+	private async fetchSaldoRow(noEmployee: string, jenisSimpanan: string) {
 		const saldoTable = await this.db.query('CALL sp_Transaksi_Penarikan_Simpanan_Get_Saldo(?, ?);',
-			[dto.NoEmployee, dto.JenisSimpanan]
-		);	
+			[noEmployee, jenisSimpanan]
+		);
 
-		// select b.NoEmployee, b.NoAnggota, b.Nama, SUM(Jumlah) as Saldo 
-		const rowSaldo = saldoTable?.[0]?.[0];
+		return saldoTable?.[0]?.[0];
+	}
+
+	async GetSaldoSimpananPenarikan(dto: GetSaldoPenarikanDto) {
+		const rowSaldo = await this.fetchSaldoRow(dto.NoEmployee, dto.JenisSimpanan);
+
+		// SP tidak mengembalikan baris bila anggota tidak ditemukan / bukan AKTIF / belum ada mutasi,
+		// sama seperti cek saldo di submit: dianggap saldo 0.
+		return {
+			NoEmployee: rowSaldo?.NoEmployee ?? dto.NoEmployee,
+			NoAnggota: rowSaldo?.NoAnggota ?? null,
+			Nama: rowSaldo?.Nama ?? null,
+			JenisSimpanan: dto.JenisSimpanan,
+			Saldo: Number(rowSaldo?.Saldo ?? 0),
+		};
+	}
+
+	async SubmitTransaksiSimpananPenarikan(dto: SubmitTransaksiPenarikanDto, createdUser: string) {
+		const rowSaldo = await this.fetchSaldoRow(dto.NoEmployee, dto.JenisSimpanan);
 		const totalSaldo = Number(rowSaldo?.Saldo ?? 0);
 
 		if(totalSaldo < dto.Jumlah) {
