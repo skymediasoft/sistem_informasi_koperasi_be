@@ -7,7 +7,7 @@ import { DepartmentRepository } from './department.repository';
 export class DepartmentService {
   constructor(private readonly departmentRepository: DepartmentRepository) {}
 
-  async create(createDepartmentDto: CreateDepartmentDto) {
+  async create(createDepartmentDto: CreateDepartmentDto & { departmentCreatedUser: string }) {
     const { departmentId, departmentName, departmentCreatedUser: user } = createDepartmentDto;
 
     if (await this.departmentRepository.findByName(departmentName)) {
