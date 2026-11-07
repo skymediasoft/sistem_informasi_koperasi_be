@@ -1,15 +1,19 @@
-import { IsString, IsDate } from 'class-validator';
+import { IsString, IsDate, IsOptional } from 'class-validator';
 
 export class ViewTransaksiSimpananTunaiDto {
   @IsString()
-  JenisSimpanan: string;
+  @IsOptional()
+  JenisSimpanan: string = '%';
 
   @IsDate()
-  DateFrom: Date;
+  @IsOptional()
+  DateFrom: Date = new Date();
 
   @IsDate()
-  DateTo: Date;
+  @IsOptional()
+  DateTo: Date = new Date();
 
   @IsString()
-  NoKaryawan: string;
+  @IsOptional()
+  NoKaryawan: string = '%';
 }

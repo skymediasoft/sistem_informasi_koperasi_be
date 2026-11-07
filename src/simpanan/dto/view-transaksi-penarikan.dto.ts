@@ -1,4 +1,4 @@
-import { IsString, IsDate, IsNotEmpty } from 'class-validator';
+import { IsString, IsDate, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class ViewTransaksiPenarikanDto {
     @IsString()
@@ -6,14 +6,14 @@ export class ViewTransaksiPenarikanDto {
     Status: string;
 
     @IsDate()
-    @IsNotEmpty()
-    DateFrom: Date;
+    @IsOptional()
+    DateFrom: Date = new Date();
 
     @IsDate()
-    @IsNotEmpty()
-    DateTo: Date;
+    @IsOptional()
+    DateTo: Date = new Date();
 
     @IsString()
-    @IsNotEmpty()
-    NoKaryawan: string;
+    @IsOptional()
+    NoKaryawan: string = '%';
 }
