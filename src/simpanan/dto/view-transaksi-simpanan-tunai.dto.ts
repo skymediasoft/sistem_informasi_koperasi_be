@@ -7,7 +7,7 @@ export class ViewTransaksiSimpananTunaiDto {
 
   @IsDate()
   @IsOptional()
-  DateFrom: Date = new Date();
+  DateFrom: Date = new Date(Date.now() - 24 * 60 * 60 * 1000); // Default to 1 day ago
 
   @IsDate()
   @IsOptional()
